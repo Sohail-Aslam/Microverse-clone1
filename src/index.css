@@ -1,0 +1,31 @@
+:root {
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  text-align: left;
+  height: 100%;
+}
+
+button {
+  border: 1px solid transparent;
+  font-size: 0.8em;
+  font-weight: 200;
+  cursor: pointer;
+}
+
+button:focus,
+button:focus-visible {
+  background: #000; /* or any other valid color */
+}
