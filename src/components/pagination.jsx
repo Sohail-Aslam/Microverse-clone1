@@ -111,7 +111,6 @@ function Pagination() {
               }}
             />
           </div>
-
           {/* Expand days for each week */}
           {openWeeks[week.id] && (
             <div className="days-container">
@@ -125,73 +124,203 @@ function Pagination() {
                       <th>Collaboration</th>
                       <th>Time</th>
                       <th>Status</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
-                  <h4 className="day">DAY 1 </h4>
                   <tbody>
+                    {/* Centered Day 1 */}
                     <tr>
-                      <td>Morning session: Diversity and Global Citizenship</td>
-                      <td>Exercise</td>
-                      <td>Morning session team</td>
-                      <td>0.5</td>
+                      <td
+                        colSpan="6"
+                        style={{
+                          textAlign: "center",
+                          fontSize: "1.2rem",
+                          fontWeight: "bold",
+                          backgroundColor: "#f0f0f0",
+                          padding: "10px",
+                        }}
+                      >
+                        DAY 1
+                      </td>
+                    </tr>
+
+                    {/* Activity Rows for Day 1 */}
+                    <tr>
+                      <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
+                        Morning session: Diversity and Global Citizenship
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Exercise
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Morning session team
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        0.5
+                      </td>
                       <td>
                         <span className="status-completed">COMPLETED</span>
                       </td>
+                      <td>
+                        <button>View</button>
+                      </td>
                     </tr>
+
+                    {/* Another row for Day 1 */}
                     <tr>
-                      <td>Morning session: Diversity and Global Citizenship</td>
-                      <td>Exercise</td>
-                      <td>Morning session team</td>
-                      <td>0.5</td>
+                      <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
+                        Morning session: Diversity and Global Citizenship
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Exercise
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Morning session team
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        0.5
+                      </td>
                       <td>
                         <span className="status-completed">COMPLETED</span>
                       </td>
+                      <td>
+                        <button>View</button>
+                      </td>
                     </tr>
-                  </tbody>
-                </table>
-                <table>
-                  <thead>
+
+                    {/* Centered Day 2 */}
                     <tr>
-                      <th>Activity</th>
-                      <th>Type</th>
-                      <th>Collaboration</th>
-                      <th>Time</th>
-                      <th>Status</th>
+                      <td
+                        colSpan="6"
+                        style={{
+                          textAlign: "center",
+                          fontSize: "1.2rem",
+                          fontWeight: "bold",
+                          backgroundColor: "#f0f0f0",
+                          padding: "10px",
+                        }}
+                      >
+                        DAY 2
+                      </td>
                     </tr>
-                    <h4 className="day">DAY 2</h4>
-                  </thead>
-                  <tbody>
+
+                    {/* Activity Rows for Day 2 */}
                     <tr>
-                      <td>Morning session: Diversity and Global Citizenship</td>
-                      <td>Exercise</td>
-                      <td>Morning session team</td>
-                      <td>0.5</td>
+                      <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
+                        Morning session: Diversity and Global Citizenship
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Exercise
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Morning session team
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        0.5
+                      </td>
                       <td>
                         <span className="status-completed">COMPLETED</span>
                       </td>
+                      <td>
+                        <button>View</button>
+                      </td>
                     </tr>
+
                     <tr>
-                      <td>Morning session: Diversity and Global Citizenship</td>
-                      <td>Exercise</td>
-                      <td>Morning session team</td>
-                      <td>0.5</td>
+                      <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
+                        Morning session: Diversity and Global Citizenship
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Exercise
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Morning session team
+                      </td>
+                      <td
+                        style={{
+                          color: "#6f695c",
+                          fontSize: ".9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        0.5
+                      </td>
                       <td>
                         <span className="status-completed">COMPLETED</span>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>Morning session: Diversity and Global Citizenship</td>
-                      <td>Exercise</td>
-                      <td>Morning session team</td>
-                      <td>0.5</td>
                       <td>
-                        <span className="status-completed">COMPLETED</span>
+                        <button>View</button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              {/* Add more days as needed */}
             </div>
           )}
         </div>

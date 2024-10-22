@@ -27,5 +27,5 @@ button {
 
 button:focus,
 button:focus-visible {
-  background: #000; /* or any other valid color */
+  background: #3a193b; /* or any other valid color */
 }

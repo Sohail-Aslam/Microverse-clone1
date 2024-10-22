@@ -22,6 +22,8 @@ import "@fontsource/montserrat/300.css";
 function sidebar() {
   return (
     <div className="sidebar">
+
+      <img style={{height:'7%', paddingLeft:'30%', paddingTop:'4%', paddingBottom:'9%'}} src="src/img/logo.png" alt="" />
       <h4 className="heading">HOME</h4>
       <ul>
         <li className="pages">

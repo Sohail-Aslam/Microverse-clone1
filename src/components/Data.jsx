@@ -3,14 +3,24 @@ import React from "react";
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaRegQuestionCircle } from "react-icons/fa";
-
+import { signOut } from "firebase/auth";
 import Pagination from "./Pagination";
+import { auth } from "../auth/firebase";
 
 function Data() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDiv = () => {
     setIsOpen((prev) => !prev); // Toggle the open state
   };
+ const handleSignOut = async () => {
+   try {
+     await auth.signOut();
+     console.log("User signed out successfully");
+   } catch (error) {
+     console.error("Error signing out:", error);
+   }
+ };
+
 
   return (
     <div className="data-container">
@@ -35,17 +45,22 @@ function Data() {
                 transform: "translate3d(700px, 60px, 0px)",
                 width: "15rem",
               }}
+              onClick={handleSignOut}
             >
               <p>SignOut</p>
             </div>
           )}
         </div>
       </div>
-      <Pagination />
-      <button className="support">
-        <FaRegQuestionCircle />
-        Support
-      </button>
+      <div>
+        <Pagination />
+        <div style={{position:'relative', height:'20%', width:'auto', bottom:'0', right:'0'}}>
+          <button className="support">
+            <FaRegQuestionCircle />
+            Support
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
