@@ -4,7 +4,7 @@ import { FaChevronDown } from "react-icons/fa";
 
 function Pagination() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [openWeeks, setOpenWeeks] = useState({}); // Track open state for each week
+  const [openWeeks, setOpenWeeks] = useState({});
 
   const toggleWeek = (id) => {
     setOpenWeeks((prev) => ({
@@ -92,7 +92,6 @@ function Pagination() {
 
   return (
     <div className="week-container">
-      {/* Displaying paginated data */}
       {paginatedData.map((week) => (
         <div className="week" key={week.id}>
           <div className="week-header">
@@ -111,10 +110,9 @@ function Pagination() {
               }}
             />
           </div>
-          {/* Expand days for each week */}
+
           {openWeeks[week.id] && (
             <div className="days-container">
-              {/* Day 1 */}
               <div className="days">
                 <table>
                   <thead>
@@ -128,7 +126,6 @@ function Pagination() {
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Centered Day 1 */}
                     <tr>
                       <td
                         colSpan="6"
@@ -144,7 +141,6 @@ function Pagination() {
                       </td>
                     </tr>
 
-                    {/* Activity Rows for Day 1 */}
                     <tr>
                       <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
                         Morning session: Diversity and Global Citizenship
@@ -184,7 +180,6 @@ function Pagination() {
                       </td>
                     </tr>
 
-                    {/* Another row for Day 1 */}
                     <tr>
                       <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
                         Morning session: Diversity and Global Citizenship
@@ -224,7 +219,6 @@ function Pagination() {
                       </td>
                     </tr>
 
-                    {/* Centered Day 2 */}
                     <tr>
                       <td
                         colSpan="6"
@@ -240,7 +234,6 @@ function Pagination() {
                       </td>
                     </tr>
 
-                    {/* Activity Rows for Day 2 */}
                     <tr>
                       <td style={{ fontSize: ".9rem", fontWeight: "400" }}>
                         Morning session: Diversity and Global Citizenship
@@ -326,7 +319,6 @@ function Pagination() {
         </div>
       ))}
 
-      {/* Pagination Controls */}
       <div className="pagination">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

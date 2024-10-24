@@ -14,9 +14,9 @@ html {
 
 .container {
   display: flex;
-  width: 100%; /* Take up full width of the screen */
+  width: 100%;
   height: 100vh;
-  overflow: auto; /* Full viewport height */
+  overflow: auto;
 }
 
 .sidebar {
@@ -29,13 +29,13 @@ html {
   bottom: 0;
   position: sticky;
   overflow-y: auto;
-  flex: 0 0 250px; /* Fixed width for sidebar */
+  flex: 0 0 250px;
   height: 100%;
   width: 100%;
 }
 
 .data-container {
-  flex: 1; /* Remaining space goes to data container */
+  flex: 1;
   background: #fafafa;
   color: white;
   height: 100%;
@@ -74,10 +74,9 @@ html {
 }
 
 .title p {
-  font-weight: bold; /* Forces bold */
+  font-weight: bold;
   color: #6f695c;
   font-size: 20px;
-  padding: 0 5%;
 }
 
 .title img {
@@ -95,7 +94,6 @@ html {
   padding: 1rem 3rem !important;
 }
 
-/* helo */
 
 .week-header {
   color: #3ac47d;
@@ -214,14 +212,13 @@ table th {
 table th h4 {
   color: #6f695c;
 }
-/* General Container Styling */
 .login-container,
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Make sure the container takes full screen height */
-  width: 2000px; /* Full screen width */
+  height: 100%;
+  width: 2000px;
   background: radial-gradient(
     circle,
     rgb(42 41 47 / 41%),
@@ -230,12 +227,21 @@ table th h4 {
   flex-direction: column;
 }
 
-/* Login Box */
+.dropdown-menu{
+  position: absolute;
+  background: #e7e7e7;
+  border: solid 1px #5a5a5a ;
+  border-radius: 3px;
+  width: 20%;
+  right: 5rem;
+  cursor: pointer;
+}
+
 .login-box,
 .signup-box {
   background-color: #fff;
   border-radius: 9px;
-  box-shadow: 0 8px 15px rgba(231, 230, 230, 0.1);
+  box-shadow:1px 0px 16px 9px rgb(0 0 0 / 40%);
   width: 40%;
   height: 40%;
   max-width: 290px;
@@ -246,7 +252,6 @@ table th h4 {
   position: relative;
 }
 
-/* Header Styling */
 .login-header,
 .signup-header {
   margin-bottom: 1rem;
@@ -270,7 +275,6 @@ h3 {
   margin-top: 0;
 }
 
-/* Input Styling */
 .login-inputs,
 .signup-inputs {
   margin-bottom: 0.5rem;
@@ -312,7 +316,6 @@ input {
 
 }
 
-/* Forgot Password Link */
 .forgot-password {
   color: #555454;
   line-height: 5px;
@@ -321,8 +324,8 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Make sure the container takes full screen height */
-  width: 100%; /* Full screen width */
+  height: 100%;
+  width: 100%;
   background: radial-gradient(
     circle,
     rgb(42 41 47 / 41%),
@@ -351,7 +354,6 @@ input {
   font-weight: 500;
 }
 
-/* Login Button */
 .login-button,
 .signup-button {
   width: 100%;
@@ -367,6 +369,7 @@ input {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   font-size: 1.15rem;
+  outline: none;
 }
 
 .login-button:hover,
@@ -374,7 +377,6 @@ input {
   background-color: #481349;
 }
 
-/* Signup Link */
 .signup-link {
   font-size: 0.9rem;
   color: #fff;

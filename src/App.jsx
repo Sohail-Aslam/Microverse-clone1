@@ -6,7 +6,7 @@ import Data from "./components/Data";
 import Login from './auth/Login';
 import Signup from './auth/Signup';
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./auth/firebase"; // Import your firebase configuration
+import { auth } from "./auth/firebase";
 import "./App.css";
 import "@fontsource/montserrat/200.css";
 import "@fontsource/montserrat/700.css";

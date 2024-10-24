@@ -10,10 +10,10 @@ function ForgotPassword() {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
-      // Send password reset email
+    
       await sendPasswordResetEmail(auth, email);
       alert("Password reset email sent! Please check your inbox.");
-      setEmail(""); // Clear the email field after successful reset
+      setEmail("");
     } catch (error) {
       alert("Error sending password reset email: " + error.message);
     }
