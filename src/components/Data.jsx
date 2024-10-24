@@ -62,15 +62,7 @@ function Data() {
       </div>
       <div>
         <Pagination />
-        <div
-          style={{
-            position: "relative",
-            height: "20%",
-            width: "auto",
-            bottom: "0",
-            right: "0",
-          }}
-        >
+        <div>
           <button className="support">
             <FaRegQuestionCircle />
             Support

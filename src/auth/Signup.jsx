@@ -113,9 +113,19 @@ function Signup() {
             />
           </div>
         </div>
+        <div
+          style={{
+            background: "#58285a",
+            display: "flex",
+            borderBottomRightRadius: "10px",
+            borderBottomLeftRadius: "10px",
+          }}
+        >
         <button type="submit" className="signup-button">
           Sign Up
         </button>
+
+        </div>
       </form>
       <p className="login-link">
         Already have an account? <Link to="/login">Log in</Link>
