@@ -232,9 +232,10 @@ table th h4 {
   background: #e7e7e7;
   border: solid 1px #5a5a5a ;
   border-radius: 3px;
-  width: 20%;
+  width: 15%;
   right: 5rem;
   cursor: pointer;
+  padding: 10px;
 }
 
 .login-box,
@@ -243,11 +244,11 @@ table th h4 {
   border-radius: 9px;
   box-shadow:1px 0px 16px 9px rgb(0 0 0 / 40%);
   width: 40%;
-  height: 40%;
+  /* height: 40%; */
   max-width: 290px;
-  max-height: 340px;
+  /* max-height: 340px; */
   min-width: 140px;
-  min-height: 300px;
+  /* min-height: 300px; */
   text-align: center;
   position: relative;
 }
@@ -364,13 +365,26 @@ input {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   cursor: pointer;
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   font-size: 1.15rem;
   outline: none;
 }
+
+.popup {
+  position: absolute;
+  top: 0;
+  border-radius: 5px;
+  background: #873e8a;
+  color: white;
+  padding: 10px; /* Add padding for better visibility */
+  z-index: 100; /* Ensure it appears above other elements */
+  width: 100%; /* Make the popup span the width of the page */
+  text-align: center; /* Center the text */
+}
+
 
 .login-button:hover,
 .signup-button:hover {

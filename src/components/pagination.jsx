@@ -5,6 +5,12 @@ import { FaChevronDown } from "react-icons/fa";
 function Pagination() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openWeeks, setOpenWeeks] = useState({});
+   const [isToggled, setIsToggled] = useState(false); // To track the toggle state
+
+   // Function to handle toggle
+   const handleToggle = () => {
+     setIsToggled(!isToggled); // Toggle the state between true and false
+   };
 
   const toggleWeek = (id) => {
     setOpenWeeks((prev) => ({
@@ -173,10 +179,18 @@ function Pagination() {
                         0.5
                       </td>
                       <td>
-                        <span className="status-completed">COMPLETED</span>
+                        <span
+                          className="status-completed"
+                          style={{
+                            backgroundColor: isToggled ? "#3ac47d" : "silver", // Change color based on state
+                          }}
+                        >
+                          {isToggled ? "COMPLETED" : "UNCOMPLETED"}{" "}
+                          {/* Change text based on state */}
+                        </span>
                       </td>
                       <td>
-                        <button>View</button>
+                        <button onClick={handleToggle}>Mark as read</button>
                       </td>
                     </tr>
 
