@@ -10,17 +10,28 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { auth, db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
+  const override = {
+    display: "block",
+    margin: "0 auto",
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setShowPopup(false);
 
     if (name === "") {
-      alert("Please enter a username.");
+      setError('Please Fill Form')
       return;
     }
 
@@ -31,24 +42,46 @@ function Signup() {
         password
       );
       const user = userCredential.user;
+    setLoading(true);
 
       await sendVerificationEmail(user);
       await updateProfile(user, { displayName: name });
       await handleSaveUsername(user);
-
-      alert("Signup successful! A verification email has been sent.");
+      setShowPopup(true);
+      setPopup("Signup successful! A verification email has been sent.");
       setEmail("");
       setPassword("");
       setName("");
     } catch (err) {
-      alert(err);
+      switch (err.code) {
+        case "auth/email-already-in-use":
+          setError("This email is already in use.");
+          break;
+        case "auth/network-request-failed":
+          setError("Check Interenet connection");
+          break;
+        case "auth/invalid-email":
+          setError("Invalid email address.");
+          break;
+        case "auth/weak-password":
+          setError("Password should be at least 6 characters.");
+          break;
+        case "auth/admin-restricted-operation":
+          setError("This operation is restricted to administrators only.");
+          break;
+        default:
+          setError(err.message);
+      }
+    } finally {
+      setLoading(false); // Set loading to false after process is complete
     }
   };
 
   const sendVerificationEmail = async (user) => {
     try {
       await sendEmailVerification(user);
-      console.log("Verification email sent.");
+      setShowPopup(true);
+      setPopup("Verification email sent.");
     } catch (error) {
       alert("Error sending verification email:", error.message);
     }
@@ -62,14 +95,22 @@ function Signup() {
         timestamp: new Date(),
         userUid: user.uid,
       });
-      alert("Username saved successfully!");
+      console.log("Username saved successfully!");
     } catch (error) {
       alert(error);
     }
   };
 
+  setTimeout(() => {
+    setShowPopup(false);
+    setError(""); // Clear the popup message
+  }, 8000);
   return (
     <div className="signup-container">
+      <div className="popup" style={{ display: showPopup ? "block" : "none" }}>
+        {popup}
+      </div>
+
       <form className="signup-box" onSubmit={handleSignup}>
         <div className="signup-header">
           <img src="src/img/logo.png" alt="logo" className="signup-logo" />
@@ -113,6 +154,19 @@ function Signup() {
             />
           </div>
         </div>
+        {error && (
+          <p
+            style={{
+              color: "red",
+              border: "1px solid red",
+              background: "#f5b8b8",
+              borderRadius: "3px",
+              margin: "0 1rem 1rem 1rem",
+            }}
+          >
+            {error}
+          </p>
+        )}
         <div
           style={{
             background: "#58285a",
@@ -121,10 +175,26 @@ function Signup() {
             borderBottomLeftRadius: "10px",
           }}
         >
-        <button type="submit" className="signup-button">
-          Sign Up
-        </button>
-
+          <button
+            type="submit"
+            className="login-button"
+            onClick={handleSignup}
+            disabled={loading}
+            style={{ background: loading ? "#6f695c" : "" }}
+          >
+            {loading ? (
+              <ClipLoader
+                color="white"
+                loading={loading}
+                cssOverride={override}
+                size={20} // Set size of spinner
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            ) : (
+              "Sign Up"
+            )}{" "}
+          </button>
         </div>
       </form>
       <p className="login-link">
