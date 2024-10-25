@@ -23,7 +23,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setShowPopup(false); // Initially hide popup
+    setShowPopup(false);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -35,16 +35,16 @@ function Login() {
 
       if (user.emailVerified) {
         setPopup("Login successful!");
-        setShowPopup(true); // Show popup for successful login
+        setShowPopup(true);
         navigate("/");
       } else {
-        setShowPopup(true); // Show popup if email not verified
+        setShowPopup(true);
         setPopup("Please verify your email before logging in.");
 
         await user.sendEmailVerification();
 
         setPopup("Verification email sent again.");
-        setShowPopup(true); // Keep popup open after email verification
+        setShowPopup(true);
         await auth.signOut();
       }
     } catch (err) {
@@ -74,12 +74,12 @@ function Login() {
           );
           break;
         default:
-          setError(err.message); // Default error message
+          setError(err.message);
       }
 
-      console.log(err.message); // Log the error message directly
+      console.log(err.message);
     } finally {
-      setLoading(false); // Set loading to false after process is complete
+      setLoading(false);
     }
   };
 
@@ -89,7 +89,7 @@ function Login() {
 
   setTimeout(() => {
     setShowPopup(false);
-    setError(""); // Clear the popup message
+    setError("");
   }, 8000);
   return (
     <div className="login-container">
@@ -116,6 +116,7 @@ function Login() {
               type="email"
               placeholder="Email..."
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="input-wrapper">
@@ -126,6 +127,7 @@ function Login() {
               type="password"
               placeholder="Password..."
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
         </div>
@@ -169,7 +171,7 @@ function Login() {
                 color="white"
                 loading={loading}
                 cssOverride={override}
-                size={20} // Set size of spinner
+                size={20}
                 aria-label="Loading Spinner"
                 data-testid="loader"
               />

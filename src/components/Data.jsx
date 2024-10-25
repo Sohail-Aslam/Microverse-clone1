@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { signOut } from "firebase/auth";
-import Pagination from "./pagination";
 import { auth, db } from "../auth/firebase";
 import { doc, getDocs, collection } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import CourseData from './CourseData'
 
 function Data() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +61,7 @@ function Data() {
         </div>
       </div>
       <div>
-        <Pagination />
+        <CourseData />
         <div>
           <button className="support">
             <FaRegQuestionCircle />
