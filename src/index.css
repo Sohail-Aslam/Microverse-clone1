@@ -25,7 +25,8 @@ button {
   cursor: pointer;
 }
 
-button:focus,
-button:focus-visible {
+.login-button,
+.signup-button:focus,
+.signup-button:focus-visible {
   background: #3a193b; /* or any other valid color */
 }
