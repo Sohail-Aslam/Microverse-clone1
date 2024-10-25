@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -8,9 +9,9 @@ import { Link } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
-import { auth, db } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 import ClipLoader from "react-spinners/ClipLoader";
+import { auth, db } from "./firebase";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -25,13 +26,35 @@ function Signup() {
     display: "block",
     margin: "0 auto",
   };
+  const handleSaveUsername = async (user) => {
+    try {
+      const studentsCollection = collection(db, "students");
+      await addDoc(studentsCollection, {
+        username: name,
+        timestamp: new Date(),
+        userUid: user.uid,
+      });
+      console.log("Username saved successfully!");
+    } catch (error) {
+      alert(error);
+    }
+  };
+  const sendVerificationEmail = async (user) => {
+    try {
+      await sendEmailVerification(user);
+      setShowPopup(true);
+      setPopup("Verification email sent.");
+    } catch (error) {
+      alert("Error sending verification email:", error.message);
+    }
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setShowPopup(false);
 
     if (name === "") {
-      setError('Please Fill Form')
+      setError("Please Fill Form");
       return;
     }
 
@@ -41,8 +64,8 @@ function Signup() {
         email,
         password
       );
-      const user = userCredential.user;
-    setLoading(true);
+      const { user } = userCredential;
+      setLoading(true);
 
       await sendVerificationEmail(user);
       await updateProfile(user, { displayName: name });
@@ -74,30 +97,6 @@ function Signup() {
       }
     } finally {
       setLoading(false); // Set loading to false after process is complete
-    }
-  };
-
-  const sendVerificationEmail = async (user) => {
-    try {
-      await sendEmailVerification(user);
-      setShowPopup(true);
-      setPopup("Verification email sent.");
-    } catch (error) {
-      alert("Error sending verification email:", error.message);
-    }
-  };
-
-  const handleSaveUsername = async (user) => {
-    try {
-      const studentsCollection = collection(db, "students");
-      await addDoc(studentsCollection, {
-        username: name,
-        timestamp: new Date(),
-        userUid: user.uid,
-      });
-      console.log("Username saved successfully!");
-    } catch (error) {
-      alert(error);
     }
   };
 

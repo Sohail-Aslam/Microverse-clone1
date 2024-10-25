@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable */
+import React, { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { signOut } from "firebase/auth";
-import { auth, db } from "../auth/firebase";
-import { doc, getDocs, collection } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
-import CourseData from './CourseData'
+import { auth } from "../auth/firebase";
+
+import CourseData from "./CourseData";
 
 function Data() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
-
-  const usersDb = collection(db, "students");
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const toggleDiv = () => {
     setIsOpen((prev) => !prev);
@@ -42,7 +29,10 @@ function Data() {
       <div className="title">
         {user ? (
           <div>
-            <p>{user.displayName || user.username}'s Progress</p>{" "}
+            <p>
+              {user.displayName || user.username}
+              's Progress
+            </p>{" "}
           </div>
         ) : (
           <p>Loading...</p>

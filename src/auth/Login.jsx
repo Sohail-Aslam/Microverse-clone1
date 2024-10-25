@@ -1,10 +1,11 @@
+/* eslint-disable */
 import React, { useState } from "react";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "./firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import ClipLoader from "react-spinners/ClipLoader";
+import { auth } from "./firebase";
 
 function Login() {
   const [email, setEmail] = useState();
@@ -31,7 +32,7 @@ function Login() {
         email,
         password
       );
-      const user = userCredential.user;
+      const { user } = userCredential;
 
       if (user.emailVerified) {
         setPopup("Login successful!");
@@ -182,7 +183,7 @@ function Login() {
         </div>
       </div>
       <p className="signup-link">
-        Don't have an account? <Link to={"/signup"}>Sign Up</Link>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
       </p>
     </div>
   );

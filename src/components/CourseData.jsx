@@ -1,18 +1,17 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 function CourseData() {
- const [isToggled, setIsToggled] = useState(false);
- const [currentPage, setCurrentPage] = useState(1);
-const [openWeeks, setOpenWeeks] = useState({});
+  const [isToggled, setIsToggled] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [openWeeks, setOpenWeeks] = useState({});
 
- const handleToggle = () => {
-   setIsToggled(!isToggled);
- };
+  const handleToggle = () => {
+    setIsToggled(!isToggled);
+  };
 
-
-
-  //emHamza course
+  // emHamza course
   const data = [
     {
       id: 1,
@@ -22,7 +21,7 @@ const [openWeeks, setOpenWeeks] = useState({});
           day: "Day 1",
           tasks: [
             {
-              id:1,
+              id: 1,
               activity: "Welcome to your first day",
               activityLink: "https://www.youtube.com/",
               type: "Lesson",
@@ -1997,7 +1996,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:8,
+      id: 8,
       week: "Week 8 - Intro and Collaboration",
       days: [
         {
@@ -2280,7 +2279,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:9,
+      id: 9,
       week: "Week 9 - Intro and Collaboration",
       days: [
         {
@@ -2563,7 +2562,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:10,
+      id: 10,
       week: "Week 10 - Intro and Collaboration",
       days: [
         {
@@ -2846,7 +2845,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:11,
+      id: 11,
       week: "Week 11 - Intro and Collaboration",
       days: [
         {
@@ -3129,7 +3128,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:12,
+      id: 12,
       week: "Week 12 - Intro and Collaboration",
       days: [
         {
@@ -3412,7 +3411,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:13,
+      id: 13,
       week: "Week 13 - Intro and Collaboration",
       days: [
         {
@@ -3695,7 +3694,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:14,
+      id: 14,
       week: "Week 14 - Intro and Collaboration",
       days: [
         {
@@ -3978,7 +3977,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:15,
+      id: 15,
       week: "Week 15 - Intro and Collaboration",
       days: [
         {
@@ -4261,7 +4260,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:16,
+      id: 16,
       week: "Week 16 - Intro and Collaboration",
       days: [
         {
@@ -4544,7 +4543,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:17,
+      id: 17,
       week: "Week 17 - Intro and Collaboration",
       days: [
         {
@@ -4827,7 +4826,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:18,
+      id: 18,
       week: "Week 18 - Intro and Collaboration",
       days: [
         {
@@ -5110,7 +5109,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:19,
+      id: 19,
       week: "Week 19 - Intro and Collaboration",
       days: [
         {
@@ -5393,7 +5392,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:20,
+      id: 20,
       week: "Week 20 - Intro and Collaboration",
       days: [
         {
@@ -5676,7 +5675,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:21,
+      id: 21,
       week: "Week 21 - Intro and Collaboration",
       days: [
         {
@@ -5959,7 +5958,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:22,
+      id: 22,
       week: "Week 22 - Intro and Collaboration",
       days: [
         {
@@ -6242,7 +6241,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:23,
+      id: 23,
       week: "Week 23 - Intro and Collaboration",
       days: [
         {
@@ -6525,7 +6524,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:24,
+      id: 24,
       week: "Week 24 - Intro and Collaboration",
       days: [
         {
@@ -6808,7 +6807,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:25,
+      id: 25,
       week: "Week 25 - Intro and Collaboration",
       days: [
         {
@@ -7091,7 +7090,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:26,
+      id: 26,
       week: "Week 26 - Intro and Collaboration",
       days: [
         {
@@ -7374,7 +7373,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:27,
+      id: 27,
       week: "Week 27 - Intro and Collaboration",
       days: [
         {
@@ -7657,7 +7656,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:28,
+      id: 28,
       week: "Week 28 - Intro and Collaboration",
       days: [
         {
@@ -7940,7 +7939,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:29,
+      id: 29,
       week: "Week 29 - Intro and Collaboration",
       days: [
         {
@@ -8223,7 +8222,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:30,
+      id: 30,
       week: "Week 30 - Intro and Collaboration",
       days: [
         {
@@ -8506,7 +8505,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:31,
+      id: 31,
       week: "Week 31 - Intro and Collaboration",
       days: [
         {
@@ -8789,7 +8788,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:32,
+      id: 32,
       week: "Week 32 - Intro and Collaboration",
       days: [
         {
@@ -9072,7 +9071,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:33,
+      id: 33,
       week: "Week 33 - Intro and Collaboration",
       days: [
         {
@@ -9355,7 +9354,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:34,
+      id: 34,
       week: "Week 34 - Intro and Collaboration",
       days: [
         {
@@ -9638,7 +9637,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:35,
+      id: 35,
       week: "Week 35 - Intro and Collaboration",
       days: [
         {
@@ -9921,7 +9920,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:36,
+      id: 36,
       week: "Week 36 - Intro and Collaboration",
       days: [
         {
@@ -10204,7 +10203,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:37,
+      id: 37,
       week: "Week 37 - Intro and Collaboration",
       days: [
         {
@@ -10487,7 +10486,7 @@ const [openWeeks, setOpenWeeks] = useState({});
       ],
     },
     {
-      id:38,
+      id: 38,
       week: "Week 38 - Intro and Collaboration",
       days: [
         {
@@ -11053,18 +11052,17 @@ const [openWeeks, setOpenWeeks] = useState({});
     },
   ];
 
-const toggleWeek = (weekId) => {
-  setOpenWeeks((prevOpenWeeks) => ({
-    ...prevOpenWeeks,
-    [weekId]: !prevOpenWeeks[weekId], 
-  }));
-};
+  const toggleWeek = (weekId) => {
+    setOpenWeeks((prevOpenWeeks) => ({
+      ...prevOpenWeeks,
+      [weekId]: !prevOpenWeeks[weekId],
+    }));
+  };
 
-
-    const itemsPerPage = 5;
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+  const itemsPerPage = 5;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(data.length / itemsPerPage);
   return (
     <div className="week-container">
       {paginatedData.map((week) => (
@@ -11132,7 +11130,7 @@ const toggleWeek = (weekId) => {
                             {task.collaboration}
                           </td>
                           <td className="time">{task.time}</td>
-                          <td >
+                          <td>
                             <span
                               className="status-completed"
                               style={{
@@ -11145,7 +11143,7 @@ const toggleWeek = (weekId) => {
                             </span>
                           </td>
                           <td>
-                            <button onClick={handleToggle}>
+                            <button type="submit" onClick={handleToggle}>
                               Mark as Complete
                             </button>
                           </td>
@@ -11162,6 +11160,7 @@ const toggleWeek = (weekId) => {
 
       <div className="pagination">
         <button
+          type="submit"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
@@ -11169,6 +11168,7 @@ const toggleWeek = (weekId) => {
         </button>
         {Array.from({ length: totalPages }, (_, index) => (
           <button
+            type="submit"
             key={index + 1}
             onClick={() => setCurrentPage(index + 1)}
             className={currentPage === index + 1 ? "active" : ""}
@@ -11177,6 +11177,7 @@ const toggleWeek = (weekId) => {
           </button>
         ))}
         <button
+          type="submit"
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }

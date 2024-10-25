@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "./firebase";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MdOutlinePassword } from "react-icons/md";
+import { auth } from "./firebase";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -10,19 +11,20 @@ function ForgotPassword() {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
-    
       await sendPasswordResetEmail(auth, email);
       alert("Password reset email sent! Please check your inbox.");
       setEmail("");
     } catch (error) {
-      alert("Error sending password reset email: " + error.message);
+      alert(`Error sending password reset email: ${error.message}`);
     }
   };
 
   return (
     <div className="forgot-password">
       <div className="forgot-container">
-        <MdOutlinePassword style={{ fontSize: "40px", color: "#58285a" , padding:'10px'}} />
+        <MdOutlinePassword
+          style={{ fontSize: "40px", color: "#58285a", padding: "10px" }}
+        />
 
         <h3>Reset Password</h3>
         <div style={{ padding: "10px", paddingTop: "20px" }}>
@@ -48,14 +50,18 @@ function ForgotPassword() {
             borderBottomLeftRadius: "10px",
           }}
         >
-          <button className="login-button" onClick={handlePasswordReset}>
+          <button
+            type="submit"
+            className="login-button"
+            onClick={handlePasswordReset}
+          >
             Get Email
           </button>
         </div>
       </div>
       <p style={{ color: "#fff" }}>
         Just{" "}
-        <Link style={{ color: "#fff", fontWeight: "600" }} to={"/login"}>
+        <Link style={{ color: "#fff", fontWeight: "600" }} to="/login">
           Login
         </Link>
       </p>

@@ -41,6 +41,7 @@ html {
   height: 100%;
   width: 100%;
 }
+
 .sidebar ul li {
   list-style-type: none;
   padding: 0.5rem 1rem;
@@ -211,6 +212,7 @@ table th {
 table th h4 {
   color: #6f695c;
 }
+
 .login-container,
 .signup-container {
   display: flex;
@@ -218,11 +220,12 @@ table th h4 {
   align-items: center;
   height: 100%;
   width: 100%;
-  background: radial-gradient(
-    circle,
-    rgb(42 41 47 / 41%),
-    rgba(0, 0, 0, 0.6) 95%
-  );
+  background:
+    radial-gradient(
+      circle,
+      rgb(42 41 47 / 41%),
+      rgba(0, 0, 0, 0.6) 95%
+    );
   flex-direction: column;
 }
 
@@ -242,12 +245,15 @@ table th h4 {
 .signup-box {
   background-color: #fff;
   border-radius: 9px;
-  box-shadow: 1px 0px 16px 9px rgb(0 0 0 / 40%);
+  box-shadow: 1px 0 16px 9px rgb(0 0 0 / 40%);
   width: 31%;
+
   /* height: 40%; */
   max-width: 290px;
+
   /* max-height: 340px; */
   min-width: 140px;
+
   /* min-height: 300px; */
   text-align: center;
   position: relative;
@@ -307,30 +313,28 @@ input {
 }
 
 .icon-email {
-  font-family: FontAwesome;
   color: #5a5a5a;
 }
 
 .icon-password {
-  font-family: FontAwesome;
   color: #5a5a5a;
 }
 
 .forgot-password {
   color: #555454;
   line-height: 5px;
-  background-color: #fff;
   box-shadow: 0 8px 15px rgba(231, 230, 230, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
-  background: radial-gradient(
-    circle,
-    rgb(42 41 47 / 41%),
-    rgba(0, 0, 0, 0.6) 95%
-  );
+  background:
+    radial-gradient(
+      circle,
+      rgb(42 41 47 / 41%),
+      rgba(0, 0, 0, 0.6) 95%
+    );
   flex-direction: column;
 }
 
@@ -364,6 +368,7 @@ input {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   cursor: pointer;
+
   /* position: absolute; */
   bottom: 0;
   border-bottom-left-radius: 8px;
@@ -417,6 +422,7 @@ input {
   font-size: 0.9rem;
   font-weight: 400;
 }
+
 .activity a {
   font-size: 0.9rem;
   font-weight: 400;
