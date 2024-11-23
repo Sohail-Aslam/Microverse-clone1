@@ -42,7 +42,7 @@ function Login() {
         setShowPopup(true);
         setPopup("Please verify your email before logging in.");
 
-        await user.sendEmailVerification();
+        // await user.sendEmailVerification();
 
         setPopup("Verification email sent again.");
         setShowPopup(true);
@@ -91,7 +91,7 @@ function Login() {
   setTimeout(() => {
     setShowPopup(false);
     setError("");
-  }, 8000);
+  }, 6000);
   return (
     <div className="login-container">
       <div className="popup" style={{ display: showPopup ? "block" : "none" }}>
@@ -146,6 +146,8 @@ function Login() {
               background: "#f5b8b8",
               borderRadius: "3px",
               margin: "0 1rem 1rem 1rem",
+              height:'auto',
+              width:'auto'
             }}
           >
             {error}

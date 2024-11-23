@@ -75,9 +75,9 @@ html {
 }
 
 .title p {
-  font-weight: bold;
   color: #6f695c;
   font-size: 20px;
+  font-weight: bold;
 }
 
 .title img {
@@ -93,6 +93,8 @@ html {
   flex-direction: column;
   background: #f9f9f9;
   padding: 1rem 3rem !important;
+  color: #555454;
+  
 }
 
 .week-header {
@@ -153,7 +155,7 @@ html {
   position: sticky;
   color: white;
   bottom: 0;
-  left: 0 !important;
+  right: 0 !important;
 }
 
 .week-dropdown {
@@ -200,13 +202,19 @@ table th {
   font-weight: 700;
 }
 
-.status-completed {
+.admin{
+  padding: 20px;
+  color: #555454;
+  font-weight: 600;
+}
+
+.status-complete {
   color: white;
   font-weight: bold;
   background: #3ac47d;
   border-radius: 5px;
   padding: 5px 10px;
-  font-size: 10px;
+  width: fit-content;
 }
 
 table th h4 {
@@ -220,13 +228,13 @@ table th h4 {
   align-items: center;
   height: 100%;
   width: 100%;
-  background:
-    radial-gradient(
-      circle,
-      rgb(42 41 47 / 41%),
-      rgba(0, 0, 0, 0.6) 95%
-    );
+  background: radial-gradient(
+    circle,
+    rgb(42 41 47 / 41%),
+    rgba(0, 0, 0, 0.6) 95%
+  );
   flex-direction: column;
+  overflow:hidden ;
 }
 
 .dropdown-menu {
@@ -235,9 +243,9 @@ table th h4 {
   border: solid 1px #5a5a5a;
   border-radius: 3px;
   width: 15%;
-  right: 5rem;
+  right: 3rem;
   cursor: pointer;
-  padding: 10px;
+  padding: 0px;
   text-align: center;
 }
 
@@ -329,12 +337,11 @@ input {
   align-items: center;
   height: 100%;
   width: 100%;
-  background:
-    radial-gradient(
-      circle,
-      rgb(42 41 47 / 41%),
-      rgba(0, 0, 0, 0.6) 95%
-    );
+  background: radial-gradient(
+    circle,
+    rgb(42 41 47 / 41%),
+    rgba(0, 0, 0, 0.6) 95%
+  );
   flex-direction: column;
 }
 
@@ -379,7 +386,7 @@ input {
 
 .popup {
   position: absolute;
-  top: 0;
+  top: 0px;
   border-radius: 5px;
   background: #873e8a;
   color: white;
@@ -427,4 +434,90 @@ input {
   font-size: 0.9rem;
   font-weight: 400;
   color: #3f6ad9;
+}
+
+.hover-up {
+  background: #dfdede;
+  position: relative;
+  width: 10%;
+  display: flex;
+      align-items: center;
+    justify-content: center;
+}
+
+.select, .admin-input {
+  width: 100%;
+  border: none;
+  height: 2.5rem;
+  background: #c2c1c1;
+  font-weight: 400;
+  border-radius: 3px;
+}
+/* Styles for the select dropdown */
+  /* Styles for the select dropdown */
+select {
+  font-weight: 700;
+  font-family: Arial, sans-serif; /* Change font */
+  font-size: 16px; /* Adjust font size */
+  color: #333; /* Text color */
+  background-color: #f9f9f9; /* Background color */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%; /* Make the dropdown fill its container */
+  appearance: none;
+  text-align: center; /* Remove default dropdown arrow in some browsers */
+}
+
+
+/* Optional: Add custom styling for the dropdown arrow */
+select::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+}
+
+/* Styles for the options */
+option {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  padding: 8px;
+  background-color: #ffffff; /* Background color for options */
+}
+
+.add-task {
+  padding: .4rem;
+  background-color: #58285a;
+  color: white;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1rem;
+  outline: none;
+  margin-top: 10px;
+}
+
+.status-toggle {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.status-toggle.completed {
+  background-color: #3ac47d;
+}
+
+.status-toggle.uncompleted {
+  background-color: rgb(151, 150, 150);
 }
