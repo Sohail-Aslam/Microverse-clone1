@@ -15,8 +15,10 @@ html {
 .container {
   display: flex;
   width: 100%;
-  height: 100vh;
-  overflow: auto;
+  height: 100%;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar {
@@ -24,22 +26,28 @@ html {
   list-style-type: none;
   background: #58285a;
   color: aliceblue;
-  padding: 0 1rem;
+  padding: 1rem;
+  position: fixed;
   top: 0;
   bottom: 0;
-  position: sticky;
-  overflow-y: auto;
-  flex: 0 0 250px;
+  left: 0;
+  width: 16rem;
   height: 100%;
-  width: 100%;
 }
 
 .data-container {
-  flex: 1;
+  margin-left: 18rem;
   background: #fafafa;
   color: white;
-  height: 100%;
-  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.pages-container {
+  margin-left: 19rem;
+  width: 70%;
+  overflow-y: auto;
+  padding-bottom: 30px;
 }
 
 .sidebar ul li {
@@ -48,6 +56,23 @@ html {
   align-items: center;
   cursor: pointer;
   font-size: 13px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidebar ul .pages .active {
+  background: #451746;
+  color: rgb(112, 112, 112);
+  font-weight: bold;
+}
+
+.sidebar ul .pages:hover {
+  background-color: #561657;
+  color: white;
+}
+
+.tab-text {
+  margin: 0;
 }
 
 .sidebar ul {
@@ -94,7 +119,6 @@ html {
   background: #f9f9f9;
   padding: 1rem 3rem !important;
   color: #555454;
-  
 }
 
 .week-header {
@@ -152,10 +176,10 @@ html {
   display: flex;
   gap: 5px;
   width: fit-content;
-  position: sticky;
+  position: absolute;
   color: white;
-  bottom: 0;
-  right: 0 !important;
+  bottom: 50px;
+  right: 50px !important;
 }
 
 .week-dropdown {
@@ -202,7 +226,7 @@ table th {
   font-weight: 700;
 }
 
-.admin{
+.admin {
   padding: 20px;
   color: #555454;
   font-weight: 600;
@@ -228,13 +252,14 @@ table th h4 {
   align-items: center;
   height: 100%;
   width: 100%;
-  background: radial-gradient(
-    circle,
-    rgb(42 41 47 / 41%),
-    rgba(0, 0, 0, 0.6) 95%
-  );
+  background:
+    radial-gradient(
+      circle,
+      rgb(42 41 47 / 41%),
+      rgba(0, 0, 0, 0.6) 95%
+    );
   flex-direction: column;
-  overflow:hidden ;
+  overflow: hidden;
 }
 
 .dropdown-menu {
@@ -245,7 +270,7 @@ table th h4 {
   width: 15%;
   right: 3rem;
   cursor: pointer;
-  padding: 0px;
+  padding: 0;
   text-align: center;
 }
 
@@ -255,14 +280,8 @@ table th h4 {
   border-radius: 9px;
   box-shadow: 1px 0 16px 9px rgb(0 0 0 / 40%);
   width: 31%;
-
-  /* height: 40%; */
   max-width: 290px;
-
-  /* max-height: 340px; */
   min-width: 140px;
-
-  /* min-height: 300px; */
   text-align: center;
   position: relative;
 }
@@ -337,11 +356,12 @@ input {
   align-items: center;
   height: 100%;
   width: 100%;
-  background: radial-gradient(
-    circle,
-    rgb(42 41 47 / 41%),
-    rgba(0, 0, 0, 0.6) 95%
-  );
+  background:
+    radial-gradient(
+      circle,
+      rgb(42 41 47 / 41%),
+      rgba(0, 0, 0, 0.6) 95%
+    );
   flex-direction: column;
 }
 
@@ -375,8 +395,6 @@ input {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   cursor: pointer;
-
-  /* position: absolute; */
   bottom: 0;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -386,14 +404,14 @@ input {
 
 .popup {
   position: absolute;
-  top: 0px;
+  top: 0;
   border-radius: 5px;
   background: #873e8a;
   color: white;
-  padding: 10px; /* Add padding for better visibility */
-  z-index: 100; /* Ensure it appears above other elements */
-  width: 100%; /* Make the popup span the width of the page */
-  text-align: center; /* Center the text */
+  padding: 10px;
+  z-index: 100;
+  width: 100%;
+  text-align: center;
 }
 
 .login-button:hover,
@@ -436,16 +454,23 @@ input {
   color: #3f6ad9;
 }
 
+.sidebar ul li a {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
 .hover-up {
   background: #dfdede;
   position: relative;
   width: 10%;
   display: flex;
-      align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
-.select, .admin-input {
+.select,
+.admin-input {
   width: 100%;
   border: none;
   height: 2.5rem;
@@ -453,24 +478,21 @@ input {
   font-weight: 400;
   border-radius: 3px;
 }
-/* Styles for the select dropdown */
-  /* Styles for the select dropdown */
+
 select {
   font-weight: 700;
-  font-family: Arial, sans-serif; /* Change font */
-  font-size: 16px; /* Adjust font size */
-  color: #333; /* Text color */
-  background-color: #f9f9f9; /* Background color */
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 100%; /* Make the dropdown fill its container */
+  width: 100%;
   appearance: none;
-  text-align: center; /* Remove default dropdown arrow in some browsers */
+  text-align: center;
 }
 
-
-/* Optional: Add custom styling for the dropdown arrow */
 select::after {
   content: "▼";
   position: absolute;
@@ -478,20 +500,18 @@ select::after {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-
 }
 
-/* Styles for the options */
 option {
   font-size: 18px;
   font-weight: 700;
   color: #333;
   padding: 8px;
-  background-color: #ffffff; /* Background color for options */
+  background-color: #fff;
 }
 
 .add-task {
-  padding: .4rem;
+  padding: 0.4rem;
   background-color: #58285a;
   color: white;
   border: none;
@@ -520,4 +540,9 @@ option {
 
 .status-toggle.uncompleted {
   background-color: rgb(151, 150, 150);
+}
+
+label {
+  font-weight: 600;
+  color: #333;
 }

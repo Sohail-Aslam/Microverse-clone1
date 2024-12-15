@@ -1,86 +1,116 @@
 /* eslint-disable */
-import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import {
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import ClipLoader from "react-spinners/ClipLoader";
 import { auth } from "./firebase";
-
+import { onAuthStateChanged } from "firebase/auth";
 function Login() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
-  const override = {
-    display: "block",
-    margin: "0 auto",
-  };
+ const override = {
+   display: "block",
+   margin: "0 auto",
+ };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setShowPopup(false);
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const { user } = userCredential;
-
-      if (user.emailVerified) {
-        setPopup("Login successful!");
-        setShowPopup(true);
+useEffect(() => {
+  setLoading(true);
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      if (currentUser.emailVerified) {
         navigate("/");
       } else {
+        setPopup("Please verify your email before accessing the dashboard.");
         setShowPopup(true);
-        setPopup("Please verify your email before logging in.");
-
-        // await user.sendEmailVerification();
-
-        setPopup("Verification email sent again.");
-        setShowPopup(true);
-        await auth.signOut();
+        setTimeout(() => setShowPopup(false), 6000);
+        auth.signOut();
       }
-    } catch (err) {
-      switch (err.code) {
-        case "auth/invalid-credential":
-        case "auth/wrong-password":
-          setError("Email or Password Incorrect.");
-          break;
-        case "auth/invalid-email":
-          setError("Invalid email address.");
-          break;
-        case "auth/weak-password":
-          setError("Password should be at least 6 characters.");
-          break;
-        case "auth/network-request-failed":
-          setError("Check Internet connection.");
-          break;
-        case "auth/admin-restricted-operation":
-          setError("This operation is restricted to administrators only.");
-          break;
-        case "auth/missing-email":
-          setError("Please enter Email & Password.");
-          break;
-        case "auth/too-many-requests":
-          setError(
-            "This account is suspended. For quick recovery, reset the password."
-          );
-          break;
-        default:
-          setError(err.message);
-      }
+    }
+    setLoading(false);
+  });
 
-      console.log(err.message);
-    } finally {
-      setLoading(false);
+  return () => unsubscribe();
+}, [navigate]);
+
+
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setShowPopup(false);
+
+  try {
+  
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+  
+    if (user.emailVerified) {
+      setPopup("Login successful!");
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 6000);
+      navigate("/");
+    } else {
+      setPopup(
+        "Please verify your email before logging in. A verification email has been sent to your inbox."
+      );
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 6000);
+
+      await sendEmailVerification(user);
+      await auth.signOut();
+    }
+  } catch (err) {
+    setError(getErrorMessage(err));
+    setTimeout(() => {
+      setError("");
+    }, 6000);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  const getErrorMessage = (err) => {
+    switch (err.code) {
+      case "auth/user-not-found":
+        return "User doesn't exist. Please sign up first.";
+      case "auth/invalid-credential":
+        return "User dosen't exsist.";
+      case "auth/wrong-password":
+        return "Email or Password Incorrect.";
+      case "auth/invalid-email":
+        return "Invalid email address.";
+      case "auth/weak-password":
+        return "Password should be at least 6 characters.";
+      case "auth/network-request-failed":
+        return "Check Internet connection.";
+      case "auth/admin-restricted-operation":
+        return "This operation is restricted to administrators only.";
+      case "auth/missing-email":
+        return "Please enter Email & Password.";
+      case "auth/too-many-requests":
+        return "This account is suspended. For quick recovery, reset the password.";
+      default:
+        return err.message;
     }
   };
 
@@ -88,10 +118,6 @@ function Login() {
     navigate("/forgotPassword");
   };
 
-  setTimeout(() => {
-    setShowPopup(false);
-    setError("");
-  }, 6000);
   return (
     <div className="login-container">
       <div className="popup" style={{ display: showPopup ? "block" : "none" }}>
@@ -146,8 +172,6 @@ function Login() {
               background: "#f5b8b8",
               borderRadius: "3px",
               margin: "0 1rem 1rem 1rem",
-              height:'auto',
-              width:'auto'
             }}
           >
             {error}

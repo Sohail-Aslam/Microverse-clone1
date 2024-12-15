@@ -1,12 +1,14 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { collection, doc, setDoc, getDocs } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, getDoc } from "firebase/firestore";
+import ClipLoader from "react-spinners/ClipLoader";
 import { db } from "../auth/firebase";
 
 const Admin = () => {
   const [courses, setCourses] = useState([]);
-  const [newCourse, setNewCourse] = useState({ id: "", courseName: "" });
+  const [loading, setLoading] = useState(false);
+  const [newCourse, setNewCourse] = useState({ id: "", name: "" });
   const [task, setTask] = useState({
     courseId: "",
     week: "",
@@ -18,8 +20,13 @@ const Admin = () => {
     time: "0.25",
     status: false,
   });
+  const [students, setStudents] = useState([]);
 
-  // Fetch courses from Firestore
+  const override = {
+    display: "block",
+    margin: "0 auto",
+  };
+
   const fetchCourses = async () => {
     const coursesCollection = collection(db, "courses");
     const coursesSnapshot = await getDocs(coursesCollection);
@@ -30,31 +37,44 @@ const Admin = () => {
     setCourses(coursesList);
   };
 
-  // Load courses on component mount
+  const fetchStudents = async () => {
+    try {
+      const studentsCollection = collection(db, "students");
+      const studentsSnapshot = await getDocs(studentsCollection);
+      const studentsList = studentsSnapshot.docs.map((doc) => ({
+        value: doc.id,
+        label: doc.data().username,
+      }));
+      setStudents(studentsList);
+    } catch (error) {
+      console.error("Error fetching students: ", error);
+      alert("Failed to fetch students.");
+    }
+  };
+
   useEffect(() => {
     fetchCourses();
+    fetchStudents();
   }, []);
 
-  // Handle new course input changes
   const handleNewCourseChange = (e) => {
     const { name, value } = e.target;
     setNewCourse((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Add a new course
   const handleAddCourse = async (e) => {
     e.preventDefault();
-    if (!newCourse.id || !newCourse.courseName) {
+    if (!newCourse.id || !newCourse.name) {
       alert("Please fill all fields for the new course.");
       return;
     }
 
     try {
       const courseDocRef = doc(db, `courses/${newCourse.id}`);
-      await setDoc(courseDocRef, { courseName: newCourse.courseName });
+      await setDoc(courseDocRef, { name: newCourse.name });
 
       alert("Course added successfully!");
-      setNewCourse({ id: "", courseName: "" });
+      setNewCourse({ id: "", name: "" });
       fetchCourses();
     } catch (error) {
       console.error("Error adding course: ", error);
@@ -62,7 +82,6 @@ const Admin = () => {
     }
   };
 
-  // Handle input changes for tasks
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTask((prev) => ({ ...prev, [name]: value }));
@@ -72,7 +91,6 @@ const Admin = () => {
     setTask((prev) => ({ ...prev, courseId: selectedOption.value }));
   };
 
-  // Add a task to the selected course
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { courseId, week, day, activity, url, type, collaboration, time } =
@@ -86,7 +104,7 @@ const Admin = () => {
     try {
       const weekDocRef = doc(db, `courses/${courseId}/weeks/${week}`);
       await setDoc(weekDocRef, { status: "in-progress" }, { merge: true });
-
+      setLoading(true);
       const dayDocRef = doc(
         db,
         `courses/${courseId}/weeks/${week}/days/${day}`
@@ -98,8 +116,6 @@ const Admin = () => {
       );
       setTask({
         courseId: "",
-        week: "",
-        day: "",
         activity: "",
         url: "",
         type: "Lesson",
@@ -118,10 +134,11 @@ const Admin = () => {
     } catch (error) {
       console.error("Error adding task: ", error);
       alert("Failed to add task.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Generate options for weeks and days
   const generateWeeks = (numWeeks) =>
     [...Array(numWeeks)].map((_, index) => `Week ${index + 1}`);
   const generateDays = (numDays) =>
@@ -151,14 +168,23 @@ const Admin = () => {
             <input
               type="text"
               name="name"
-              value={newCourse.courseName}
+              value={newCourse.name}
               onChange={handleNewCourseChange}
               required
             />
           </label>
           <br />
           <button className="add-task" type="submit">
-            Add Course
+            {loading ? (
+              <ClipLoader
+                color="white"
+                loading={loading}
+                css={override}
+                size={20}
+              />
+            ) : (
+              "Add Course"
+            )}
           </button>
         </form>
       </div>
@@ -262,7 +288,7 @@ const Admin = () => {
               required
             >
               <option value="Solo">Solo</option>
-              <option value="2-3 person group">2-3 person group</option>
+              <option value="2-3 Group">2-3 Group</option>
             </select>
           </label>
           <br />
@@ -277,11 +303,37 @@ const Admin = () => {
               <option value="0.25">0.25</option>
               <option value="0.5">0.5</option>
               <option value="0.75">0.75</option>
+              <option value="1">1</option>
+              <option value="1.25">1.25</option>
+              <option value="1.5">1.5</option>
+              <option value="1.75">1.75</option>
+              <option value="2">2</option>
+              <option value="2.25">2.25</option>
+              <option value="2.5">2.5</option>
+              <option value="2.75">2.75</option>
+              <option value="3">3</option>
+              <option value="3.25">3.25</option>
+              <option value="3.5">3.5</option>
+              <option value="3.75">3.75</option>
+              <option value="4">4</option>
+              <option value="4.25">4.25</option>
+              <option value="4.5">4.5</option>
+              <option value="4.75">4.75</option>
+              <option value="5">5</option>
             </select>
           </label>
           <br />
-          <button className="add-task" type="submit">
-            Add Task
+          <button className="add-task" type="submit" disabled={loading}>
+            {loading ? (
+              <ClipLoader
+                color="white"
+                loading={loading}
+                css={override}
+                size={20}
+              />
+            ) : (
+              "Add Task"
+            )}
           </button>
         </form>
       </div>

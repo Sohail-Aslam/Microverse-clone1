@@ -1,11 +1,9 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaRegQuestionCircle } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { auth } from "../auth/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import CourseData from "./CourseData";
 
 function Data() {
 
@@ -26,16 +24,16 @@ function Data() {
   };
 
   useEffect(() => {
-    // Listen for auth state changes
+    
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser(currentUser); // Set the user data when authenticated
+        setUser(currentUser); 
       } else {
-        setUser(null); // Set user to null when not authenticated
+        setUser(null); 
       }
     });
 
-    // Cleanup the listener when the component is unmounted
+    
     return () => unsubscribe();
   }, []);
 
@@ -63,15 +61,7 @@ function Data() {
           )}
         </div>
       </div>
-      <div>
-        <CourseData />
-        <div>
-          <button className="support">
-            <FaRegQuestionCircle />
-            Support
-          </button>
-        </div>
-      </div>
+  
     </div>
   );
 }
