@@ -1,20 +1,18 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaRegQuestionCircle } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { auth } from "../auth/firebase";
-
-import CourseData from "./CourseData";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Data() {
+
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
 
   const toggleDiv = () => {
     setIsOpen((prev) => !prev);
   };
-
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -24,19 +22,30 @@ function Data() {
     }
   };
 
+  useEffect(() => {
+    
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser); 
+      } else {
+        setUser(null); 
+      }
+    });
+    
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="data-container">
       <div className="title">
         {user ? (
           <div>
-            <p>
-              {user.displayName || user.username}
-              's Progress
-            </p>{" "}
+            <p>{user.displayName || user.username}'s Progress</p>
           </div>
         ) : (
           <p>Loading...</p>
-        )}
+        )}{" "}
+        
         <div>
           <img className="signout" src="src/img/signout.jpg" alt="" />
           <IoMdArrowDropdown
@@ -50,15 +59,7 @@ function Data() {
           )}
         </div>
       </div>
-      <div>
-        <CourseData />
-        <div>
-          <button className="support">
-            <FaRegQuestionCircle />
-            Support
-          </button>
-        </div>
-      </div>
+  
     </div>
   );
 }

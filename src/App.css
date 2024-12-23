@@ -16,30 +16,46 @@ html {
   display: flex;
   width: 100%;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .sidebar {
-  text-align: left;
-  list-style-type: none;
+  width: 23%;
   background: #58285a;
   color: aliceblue;
-  padding: 0 1rem;
-  top: 0;
-  bottom: 0;
+  padding: 1rem;
+  text-align: left;
+  list-style-type: none;
   position: sticky;
-  overflow-y: auto;
-  flex: 0 0 250px;
+  top: 0;
   height: 100%;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.main-content > .data {
   width: 100%;
+  background: #f9f9f9;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pages-container {
+  flex: 1;
+  overflow-y: auto;
+  background: #fff;
+  padding: 1rem;
 }
 
 .data-container {
-  flex: 1;
   background: #fafafa;
-  color: white;
-  height: 100%;
-  width: 100%;
+  width: 73%;
 }
 
 .sidebar ul li {
@@ -48,6 +64,23 @@ html {
   align-items: center;
   cursor: pointer;
   font-size: 13px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidebar ul .pages .active {
+  background: #451746;
+  color: rgb(112, 112, 112);
+  font-weight: bold;
+}
+
+.sidebar ul .pages:hover {
+  background-color: #561657;
+  color: white;
+}
+
+.tab-text {
+  margin: 0;
 }
 
 .sidebar ul {
@@ -72,12 +105,13 @@ html {
   align-items: center;
   padding: 8px;
   justify-content: space-between;
+  width: 135%;
 }
 
 .title p {
-  font-weight: bold;
   color: #6f695c;
   font-size: 20px;
+  font-weight: bold;
 }
 
 .title img {
@@ -93,6 +127,7 @@ html {
   flex-direction: column;
   background: #f9f9f9;
   padding: 1rem 3rem !important;
+  color: #555454;
 }
 
 .week-header {
@@ -113,6 +148,7 @@ html {
   text-transform: uppercase;
   font-size: 0.88rem;
   min-width: 429px;
+  margin-bottom: 10px;
 }
 
 .pagination {
@@ -150,10 +186,10 @@ html {
   display: flex;
   gap: 5px;
   width: fit-content;
-  position: sticky;
+  position: absolute;
   color: white;
-  bottom: 0;
-  left: 0 !important;
+  bottom: 50px;
+  right: 50px !important;
 }
 
 .week-dropdown {
@@ -200,13 +236,19 @@ table th {
   font-weight: 700;
 }
 
-.status-completed {
+.admin {
+  padding: 20px;
+  color: #555454;
+  font-weight: 600;
+}
+
+.status-complete {
   color: white;
   font-weight: bold;
   background: #3ac47d;
   border-radius: 5px;
   padding: 5px 10px;
-  font-size: 10px;
+  width: fit-content;
 }
 
 table th h4 {
@@ -227,6 +269,7 @@ table th h4 {
       rgba(0, 0, 0, 0.6) 95%
     );
   flex-direction: column;
+  overflow: hidden;
 }
 
 .dropdown-menu {
@@ -235,9 +278,9 @@ table th h4 {
   border: solid 1px #5a5a5a;
   border-radius: 3px;
   width: 15%;
-  right: 5rem;
+  right: 3rem;
   cursor: pointer;
-  padding: 10px;
+  padding: 0;
   text-align: center;
 }
 
@@ -247,14 +290,8 @@ table th h4 {
   border-radius: 9px;
   box-shadow: 1px 0 16px 9px rgb(0 0 0 / 40%);
   width: 31%;
-
-  /* height: 40%; */
   max-width: 290px;
-
-  /* max-height: 340px; */
   min-width: 140px;
-
-  /* min-height: 300px; */
   text-align: center;
   position: relative;
 }
@@ -368,8 +405,6 @@ input {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   cursor: pointer;
-
-  /* position: absolute; */
   bottom: 0;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -383,10 +418,10 @@ input {
   border-radius: 5px;
   background: #873e8a;
   color: white;
-  padding: 10px; /* Add padding for better visibility */
-  z-index: 100; /* Ensure it appears above other elements */
-  width: 100%; /* Make the popup span the width of the page */
-  text-align: center; /* Center the text */
+  padding: 10px;
+  z-index: 100;
+  width: 100%;
+  text-align: center;
 }
 
 .login-button:hover,
@@ -427,4 +462,76 @@ input {
   font-size: 0.9rem;
   font-weight: 400;
   color: #3f6ad9;
+}
+
+.sidebar ul li a {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.hover-up {
+  background: #dfdede;
+  position: relative;
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+select {
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  padding: 8px;
+  border: 1px solid #58285a;
+  border-radius: 4px;
+  width: 100%;
+  appearance: none;
+  text-align: center;
+}
+
+option {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  padding: 0;
+  background-color: #fff;
+}
+
+.add-task {
+  padding: 0.4rem;
+  background-color: #58285a;
+  color: white;
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1rem;
+  outline: none;
+  margin-top: 10px;
+}
+
+.status-toggle {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.status-toggle.completed {
+  background-color: #3ac47d;
+}
+
+.status-toggle.uncompleted {
+  background-color: rgb(151, 150, 150);
+}
+
+label {
+  font-weight: 600;
+  color: #333;
 }
