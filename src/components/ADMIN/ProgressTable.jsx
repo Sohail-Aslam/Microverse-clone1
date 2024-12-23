@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import ClipLoader from "react-spinners/ClipLoader";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../auth/firebase";
+import { db } from "../../auth/firebase";
 
 function ProgressTable() {
   const [students, setStudents] = useState([]);

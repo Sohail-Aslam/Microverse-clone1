@@ -7,32 +7,25 @@ import {
   getDocs,
   doc,
   updateDoc,
-  getDoc,
-  onSnapshot,
+  getDoc, query, where
 } from "firebase/firestore";
 import { auth, db } from "../auth/firebase";
-import Admin from "./Admin";
 import ClipLoader from "react-spinners/ClipLoader";
-import Sidebar from "./sidebar";
-
-const ADMIN_EMAILS = ["imumairhamza@gmail.com", "emsohailaslam@gmail.com"];
 
 function CourseData() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openWeeks, setOpenWeeks] = useState({});
-  const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
-  const [itemsPerPage] = useState(1);
   const [loading, setLoading] = useState(false);
-const [loadingTaskId, setLoadingTaskId] = useState(null);
+  const [loadingTaskId, setLoadingTaskId] = useState(null);
   const [loadingCourses, setLoadingCourses] = useState(true);
 
   useEffect(() => {
     // Simulate course loading
     const fetchData = async () => {
       setLoadingCourses(true);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); 
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setLoadingCourses(false);
     };
     fetchData();
@@ -42,7 +35,7 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
     display: "block",
     margin: "0 auto",
   };
-  
+
   const toggleStatus = async (
     courseId,
     weekId,
@@ -57,7 +50,7 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
         db,
         `courses/${courseId}/weeks/${weekId}/days/${dayId}/tasks/${taskId}`
       );
-      setLoadingTaskId(taskId); 
+      setLoadingTaskId(taskId);
 
       // Fetch the task's current data
       const taskDoc = await getDoc(taskDocRef);
@@ -65,7 +58,7 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
 
       const updatedStatus = {
         ...taskData.statusByUser,
-        [user.uid]: !currentStatus, 
+        [user.uid]: !currentStatus,
       };
       await updateDoc(taskDocRef, {
         statusByUser: updatedStatus,
@@ -121,94 +114,159 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        setIsAdmin(ADMIN_EMAILS.includes(user.email));
       } else {
         setUser(null);
-        setIsAdmin(false);
       }
     });
   }, []);
 
   // Fetch data from Firestore
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-      try {
-        const coursesCollection = collection(db, "courses");
-        const coursesSnapshot = await getDocs(coursesCollection);
+ useEffect(() => {
+   if (!user?.uid) {
+     setCourses([]);
+     return;
+   }
 
-        const coursesData = await Promise.all(
-          coursesSnapshot.docs.map(async (courseDoc) => {
-            const courseData = { id: courseDoc.id, ...courseDoc.data() };
+   const fetchCourses = async () => {
+     setLoading(true);
 
-            const weeksCollection = collection(
-              db,
-              `courses/${courseDoc.id}/weeks`
-            );
-            const weeksSnapshot = await getDocs(weeksCollection);
+     try {
+       const studentsCollection = collection(db, "students");
+       const userQuery = query(
+         studentsCollection,
+         where("userUid", "==", user.uid)
+       );
+       const userSnapshot = await getDocs(userQuery);
 
-            courseData.weeks = await Promise.all(
-              weeksSnapshot.docs.map(async (weekDoc) => {
-                const weekData = { id: weekDoc.id, ...weekDoc.data() };
+       if (userSnapshot.empty) {
+         console.warn("User not found in students collection.");
+         setCourses([]);
+         return;
+       }
 
-                const daysCollection = collection(
-                  db,
-                  `courses/${courseDoc.id}/weeks/${weekDoc.id}/days`
-                );
-                const daysSnapshot = await getDocs(daysCollection);
+       const userData = userSnapshot.docs[0].data();
+       const { assignedCourses } = userData;
 
-                weekData.days = await Promise.all(
-                  daysSnapshot.docs.map(async (dayDoc) => {
-                    const dayData = { id: dayDoc.id, ...dayDoc.data() };
+       if (!assignedCourses || assignedCourses.length === 0) {
+         console.warn("No assigned courses for this user.");
+         return <p>Please log in to view your courses.</p>;
+         setCourses([]);
+         return;
+       }
 
-                    const tasksCollection = collection(
-                      db,
-                      `courses/${courseDoc.id}/weeks/${weekDoc.id}/days/${dayDoc.id}/tasks`
-                    );
-                    const tasksSnapshot = await getDocs(tasksCollection);
+      // Fetch courses data, including weeks, days, and tasks
+       const coursesCollection = collection(db, "courses");
+       const coursesSnapshot = await getDocs(coursesCollection);
 
-                    dayData.tasks = tasksSnapshot.docs.map((taskDoc) => {
-                      const taskData = taskDoc.data();
-                      const userStatus =
-                        taskData.statusByUser?.[user?.uid] || false;
-                      return {
-                        id: taskDoc.id,
-                        ...taskData,
-                        currentStatus: userStatus,
-                      };
-                    });
+       const coursesData = await Promise.all(
+         coursesSnapshot.docs
+           .filter((courseDoc) => assignedCourses.includes(courseDoc.id)) // Filter courses assigned to the user
+           .map(async (courseDoc) => {
+             const courseData = { id: courseDoc.id, ...courseDoc.data() };
 
-                    return dayData;
-                  })
-                );
+             const weeksCollection = collection(
+               db,
+               `courses/${courseDoc.id}/weeks`
+             );
+             const weeksSnapshot = await getDocs(weeksCollection);
 
-                return weekData;
-              })
-            );
+             courseData.weeks = await Promise.all(
+               weeksSnapshot.docs.map(async (weekDoc) => {
+                 const weekData = { id: weekDoc.id, ...weekDoc.data() };
 
-            return courseData;
-          })
-        );
+                 const daysCollection = collection(
+                   db,
+                   `courses/${courseDoc.id}/weeks/${weekDoc.id}/days`
+                 );
+                 const daysSnapshot = await getDocs(daysCollection);
 
-        setCourses(coursesData);
-      } catch (error) {
-        console.error("Error fetching courses data: ", error);
-      } finally {
-        setLoading(false); // Set loading to false after process is complete
-      }
-    };
+                 weekData.days = await Promise.all(
+                   daysSnapshot.docs.map(async (dayDoc) => {
+                     const dayData = { id: dayDoc.id, ...dayDoc.data() };
 
-    if (user) {
-      fetchCourses();
-    }
-  }, [user]);
+                     const tasksCollection = collection(
+                       db,
+                       `courses/${courseDoc.id}/weeks/${weekDoc.id}/days/${dayDoc.id}/tasks`
+                     );
+                     const tasksSnapshot = await getDocs(tasksCollection);
 
-  // Pagination logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const paginatedData = courses.slice(indexOfFirstItem, indexOfLastItem);
+                     dayData.tasks = tasksSnapshot.docs.map((taskDoc) => {
+                       const taskData = taskDoc.data();
+                       const userStatus =
+                         taskData.statusByUser?.[user?.uid] || false;
+                       return {
+                         id: taskDoc.id,
+                         ...taskData,
+                         currentStatus: userStatus,
+                       };
+                     });
 
-  const totalPages = Math.ceil(courses.length / itemsPerPage);
+                     return dayData;
+                   })
+                 );
+
+                 return weekData;
+               })
+             );
+
+             return courseData;
+           })
+       );
+
+       setCourses(coursesData);
+     } catch (error) {
+       console.error("Error fetching courses data:", error);
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   fetchCourses();
+ }, [user]);
+
+ if (!courses.length) {
+   return (
+     <div className="no-courses-container">
+       <h2>No Courses Assigned</h2>
+       <p>It seems like there are no courses assigned to your account.</p>
+       <img
+         src="src/img/nodata.jpg"
+         alt="No Courses"
+         style={{ width: "300px", margin: "20px auto", display: "block" }}
+       />
+       <button
+         onClick={() => window.location.reload()}
+         style={{
+           backgroundColor: "#6f695c",
+           color: "white",
+           padding: "10px 20px",
+           border: "none",
+           cursor: "pointer",
+           borderRadius: "5px",
+         }}
+       >
+         Retry
+       </button>
+     </div>
+   );
+ }
+
+
+const [itemsPerPage] = useState(5); // Number of weeks per page
+const indexOfLastItem = currentPage * itemsPerPage;
+const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+// Update this logic to paginate weeks within each course
+const paginatedData = courses.map((course) => ({
+  ...course,
+  weeks: course.weeks.slice(indexOfFirstItem, indexOfLastItem),
+}));
+
+const totalPages = Math.ceil(
+  courses.reduce((total, course) => total + course.weeks.length, 0) /
+    itemsPerPage
+);
+
 
   // Toggle week view
   const toggleWeek = (weekId) => {
@@ -220,7 +278,6 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
 
   return (
     <div className="week-container">
-      {/* {isAdmin && <Admin />} */}
       {loadingCourses ? (
         <div className="loading-container">
           <ClipLoader size={50} color="#6f695c" loading={true} />
@@ -233,9 +290,7 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
             {course.weeks.map((week) => (
               <div className="week" key={week.id}>
                 <div className="week-header">
-                  <p>
-                  {week.id.replace("week-", "Week")}
-                  </p>
+                  <p>{week.id.replace("week-", "Week")}</p>
                   <FaChevronDown
                     className="week-dropdown"
                     onClick={() => toggleWeek(week.id)}
@@ -353,7 +408,6 @@ const [loadingTaskId, setLoadingTaskId] = useState(null);
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
-            type="change"
             key={index}
             onClick={() => setCurrentPage(index + 1)}
             className={index + 1 === currentPage ? "active" : ""}

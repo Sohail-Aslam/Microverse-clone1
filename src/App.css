@@ -15,39 +15,47 @@ html {
 .container {
   display: flex;
   width: 100%;
-  height: 100%;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
-  text-align: left;
-  list-style-type: none;
+  width: 23%;
   background: #58285a;
   color: aliceblue;
   padding: 1rem;
-  position: fixed;
+  text-align: left;
+  list-style-type: none;
+  position: sticky;
   top: 0;
-  bottom: 0;
-  left: 0;
-  width: 16rem;
   height: 100%;
 }
 
-.data-container {
-  margin-left: 18rem;
-  background: #fafafa;
-  color: white;
-  padding: 20px;
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow-y: auto;
 }
 
+.main-content > .data {
+  width: 100%;
+  background: #f9f9f9;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 .pages-container {
-  margin-left: 19rem;
-  width: 70%;
+  flex: 1;
   overflow-y: auto;
-  padding-bottom: 30px;
+  background: #fff;
+  padding: 1rem;
+}
+
+.data-container {
+  background: #fafafa;
+  width: 73%;
 }
 
 .sidebar ul li {
@@ -97,6 +105,7 @@ html {
   align-items: center;
   padding: 8px;
   justify-content: space-between;
+  width: 135%;
 }
 
 .title p {
@@ -139,6 +148,7 @@ html {
   text-transform: uppercase;
   font-size: 0.88rem;
   min-width: 429px;
+  margin-bottom: 10px;
 }
 
 .pagination {
@@ -469,44 +479,23 @@ input {
   justify-content: center;
 }
 
-.select,
-.admin-input {
-  width: 100%;
-  border: none;
-  height: 2.5rem;
-  background: #c2c1c1;
-  font-weight: 400;
-  border-radius: 3px;
-}
-
 select {
-  font-weight: 700;
-  font-family: Arial, sans-serif;
+  font-weight: 500;
   font-size: 16px;
   color: #333;
-  background-color: #f9f9f9;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #58285a;
   border-radius: 4px;
   width: 100%;
   appearance: none;
   text-align: center;
 }
 
-select::after {
-  content: "▼";
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
 option {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   color: #333;
-  padding: 8px;
+  padding: 0;
   background-color: #fff;
 }
 

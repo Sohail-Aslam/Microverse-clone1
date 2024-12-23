@@ -7,7 +7,6 @@ import { onAuthStateChanged } from "firebase/auth";
 
 function Data() {
 
-
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -32,7 +31,6 @@ function Data() {
         setUser(null); 
       }
     });
-
     
     return () => unsubscribe();
   }, []);

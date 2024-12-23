@@ -1,20 +1,10 @@
 /* eslint-disable */
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import { FaTasks } from "react-icons/fa";
 import { MdFeedback } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
-import { ImLoop } from "react-icons/im";
-import { FaQuestionCircle } from "react-icons/fa";
-import { FaAngry } from "react-icons/fa";
-import { FaHandshake } from "react-icons/fa";
-import { MdGroups } from "react-icons/md";
-import { FaCalendarMinus } from "react-icons/fa";
-import { FaGithub } from "react-icons/fa";
-import { RiSuitcaseFill } from "react-icons/ri";
-import { MdOutlineFeed } from "react-icons/md";
-import { FaSlack } from "react-icons/fa";
 import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/300.css";
 import { RiAdminFill } from "react-icons/ri";
@@ -25,16 +15,16 @@ import { auth } from "../auth/firebase";
 const ADMIN_EMAILS = ["imumairhamza@gmail.com", "emsohailaslam@gmail.com"];
 
 function sidebar() {
-    const [isAdmin, setIsAdmin] = useState(false);
-    useEffect(() => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setIsAdmin(ADMIN_EMAILS.includes(user.email));
-        } else {
-          setIsAdmin(false);
-        }
-      });
-    }, []);
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAdmin(ADMIN_EMAILS.includes(user.email));
+      } else {
+        setIsAdmin(false);
+      }
+    });
+  }, []);
   return (
     <div className="sidebar">
       <img
@@ -57,15 +47,14 @@ function sidebar() {
 
       <h4 className="heading">LEARN</h4>
       <ul>
-          <li className="pages">
-        <NavLink to="/">
+        <li className="pages">
+          <NavLink to="/">
             <p className="tab-text">
-            <FaTasks className="icons" />
-
-            View Progress
+              <FaTasks className="icons" />
+              View Progress
             </p>
-        </NavLink>
-          </li>
+          </NavLink>
+        </li>
         <li className="pages">
           <MdFeedback className="icons" />
           Professional Skills Feedback
@@ -86,25 +75,30 @@ function sidebar() {
             <li className="pages">
               <NavLink to="/admin">
                 <p className="tab-text">
-                <RiAdminFill className="icons" />
-
-                Admin Panel
+                  <RiAdminFill className="icons" />
+                  Admin Panel
+                </p>
+              </NavLink>
+            </li>
+            <li className="pages">
+              <NavLink to="/assign-courses">
+                <p className="tab-text">
+                  <RiAdminFill className="icons" />
+                  Assign Courses
                 </p>
               </NavLink>
             </li>
             <li className="pages">
               <NavLink to="/progresstable">
                 <p className="tab-text">
-                <RiAdminFill className="icons" />
-
-                User Progress
+                  <RiAdminFill className="icons" />
+                  User Progress
                 </p>
               </NavLink>
             </li>
           </ul>
         </div>
       )}
-      
     </div>
   );
 }

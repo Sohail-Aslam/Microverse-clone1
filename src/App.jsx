@@ -13,9 +13,10 @@ import "@fontsource/montserrat/200.css";
 import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/400.css";
 import ForgotPassword from "./auth/ForgotPassword";
-import Admin from "./components/Admin";
-import ProgressTable from "./components/ProgressTable";
+import Admin from "./components/ADMIN/Admin";
+import ProgressTable from "./components/ADMIN/ProgressTable";
 import CourseData from "./components/CourseData";
+import AssignCourse from "./components/ADMIN/AssignCourse";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -51,40 +52,51 @@ function App() {
           <Route path="/forgotPassword" element={<ForgotPassword />} />
         </Routes>
         {user && <Sidebar />}
-        {user && <Data />}
-
-        <div className="pages-container">
-          <Routes>
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <Admin />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/progresstable"
-              element={
-                <ProtectedRoute>
-                  <ProgressTable />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <CourseData />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+        <div className="main-content">
+          {user && <Data />}
+          <div className="pages-container">
+            <Routes>
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <Admin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/progresstable"
+                element={
+                  <ProtectedRoute>
+                    <ProgressTable />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <CourseData />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/assign-courses"
+                element={
+                  <ProtectedRoute>
+                    <AssignCourse />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+          {user && (
+            <button className="support">
+              <FaRegQuestionCircle />
+              Support
+            </button>
+          )}
         </div>
-        <button className="support">
-          <FaRegQuestionCircle />
-          Support
-        </button>
       </div>
     </BrowserRouter>
   );
