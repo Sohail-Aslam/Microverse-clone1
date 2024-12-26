@@ -42,8 +42,7 @@ function Signup() {
   const sendVerificationEmail = async (user) => {
     try {
       await sendEmailVerification(user);
-      setShowPopup(true);
-      setPopup("Verification email sent.");
+      
     } catch (error) {
       alert("Error sending verification email:", error.message);
     }
@@ -55,6 +54,10 @@ function Signup() {
 
     if (name === "") {
       setError("Please Fill Form");
+      setTimeout(() => {
+        setShowPopup(false);
+        setError(""); // Clear the popup message
+      }, 6000);
       return;
     }
 
@@ -71,7 +74,11 @@ function Signup() {
       await updateProfile(user, { displayName: name });
       await handleSaveUsername(user);
       setShowPopup(true);
-      setPopup("Signup successful! A verification email has been sent.");
+      setPopup("Signup successful! A verification email sent.");
+      setTimeout(() => {
+        setShowPopup(false);
+        setError(""); // Clear the popup message
+      }, 5000);
       setEmail("");
       setPassword("");
       setName("");
@@ -100,10 +107,6 @@ function Signup() {
     }
   };
 
-  setTimeout(() => {
-    setShowPopup(false);
-    setError(""); // Clear the popup message
-  }, 8000);
   return (
     <div className="signup-container">
       <div className="popup" style={{ display: showPopup ? "block" : "none" }}>
@@ -122,7 +125,7 @@ function Signup() {
             </i>
             <input
               type="text"
-              placeholder="Full Name..."
+              placeholder="Enter Username..."
               onChange={(e) => setName(e.target.value)}
               value={name}
               required
