@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { FaRegQuestionCircle } from "react-icons/fa";
@@ -17,9 +17,12 @@ import Admin from "./components/ADMIN/Admin";
 import ProgressTable from "./components/ADMIN/ProgressTable";
 import CourseData from "./components/CourseData";
 import AssignCourse from "./components/ADMIN/AssignCourse";
+import { AdminProvider, AdminContext } from "./context"; // Import AdminContext
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
+  const { isAdmin } = useContext(AdminContext); // Access isAdmin value from context
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -43,62 +46,85 @@ function App() {
   const ProtectedRoute = ({ children }) =>
     user ? children : <Navigate to="/login" />;
 
+  const RedirectAdmin = () => {
+    if (user && isAdmin) {
+      return <Navigate to="/admin" />;
+    }
+    return null; // Else, render nothing
+  };
+
   return (
-    <BrowserRouter>
-      <div className="container">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgotPassword" element={<ForgotPassword />} />
-        </Routes>
-        {user && <Sidebar />}
-        <div className="main-content">
-          {user && <Data />}
-          <div className="pages-container">
-            <Routes>
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <Admin />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/progresstable"
-                element={
-                  <ProtectedRoute>
-                    <ProgressTable />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <CourseData />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/assign-courses"
-                element={
-                  <ProtectedRoute>
-                    <AssignCourse />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
+    <AdminProvider>
+      {" "}
+      {/* Wrap your components with AdminProvider */}
+      <BrowserRouter>
+        <div className="container">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
+          </Routes>
+
+          {/* Redirect admin to /admin */}
+          <RedirectAdmin />
+
+          {user && <Sidebar />}
+          <div className="main-content">
+            {user && <Data />}
+            <div className="pages-container">
+              <Routes>
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <Admin />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/progresstable"
+                  element={
+                    <ProtectedRoute>
+                      <ProgressTable />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <CourseData />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/assign-courses"
+                  element={
+                    <ProtectedRoute>
+                      <AssignCourse />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </div>
+            {user && (
+              <button className="support">
+                <FaRegQuestionCircle />
+                Support
+              </button>
+            )}
           </div>
-          {user && (
-            <button className="support">
-              <FaRegQuestionCircle />
-              Support
-            </button>
-          )}
         </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AdminProvider>
   );
 }
 
