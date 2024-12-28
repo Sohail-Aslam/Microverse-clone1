@@ -46,12 +46,7 @@ function App() {
   const ProtectedRoute = ({ children }) =>
     user ? children : <Navigate to="/login" />;
 
-  const RedirectAdmin = () => {
-    if (user && isAdmin) {
-      return <Navigate to="/admin" />;
-    }
-    return null; // Else, render nothing
-  };
+ 
 
   return (
     <AdminProvider>
@@ -66,7 +61,6 @@ function App() {
           </Routes>
 
           {/* Redirect admin to /admin */}
-          <RedirectAdmin />
 
           {user && <Sidebar />}
           <div className="main-content">

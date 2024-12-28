@@ -7,7 +7,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import {
   doc,
   updateDoc,
-  getDoc,
   collection,
   getDocs,
   query,
@@ -31,7 +30,7 @@ const UsersList = () => {
   };
 
   const [openWeeks, setOpenWeeks] = useState({});
-  const [loadingTaskId, setLoadingTaskId] = useState(null);
+const [loadingTasks, setLoadingTasks] = useState({});
   const [preparedCourses, setPreparedCourses] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -160,6 +159,63 @@ const UsersList = () => {
   if (usersError) return <p>Error fetching users: {usersError}</p>;
   if (coursesError) return <p>Error fetching courses: {coursesError}</p>;
 
+  const toggleTaskStatus = async (
+    courseId,
+    weekId,
+    dayId,
+    taskId,
+    currentStatus
+  ) => {
+    setLoadingTasks((prev) => ({ ...prev, [taskId]: true }));
+
+    try {
+      const taskDocRef = doc(
+        db,
+        `courses/${courseId}/weeks/${weekId}/days/${dayId}/tasks/${taskId}`
+      );
+
+      const updatedStatus = !currentStatus;
+
+      await updateDoc(taskDocRef, {
+        [`statusByUser.${user.uid}`]: updatedStatus,
+      });
+
+      setPreparedCourses((prevCourses) =>
+        prevCourses.map((course) =>
+          course.id === courseId
+            ? {
+                ...course,
+                weeks: course.weeks.map((week) =>
+                  week.id === weekId
+                    ? {
+                        ...week,
+                        days: week.days.map((day) =>
+                          day.id === dayId
+                            ? {
+                                ...day,
+                                tasks: day.tasks.map((task) =>
+                                  task.id === taskId
+                                    ? { ...task, currentStatus: updatedStatus }
+                                    : task
+                                ),
+                              }
+                            : day
+                        ),
+                      }
+                    : week
+                ),
+              }
+            : course
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling task status:", error);
+    } finally {
+      setLoadingTasks((prev) => ({ ...prev, [taskId]: false }));
+    }
+  };
+
+
   return (
     <div>
       {preparedCourses.map((course) => (
@@ -218,9 +274,13 @@ const UsersList = () => {
                                     {task.activity}
                                   </a>
                                 </td>
-                                <td>{task.type || "N/A"}</td>
-                                <td>{task.collaboration || "N/A"}</td>
-                                <td>{task.time || "N/A"}</td>
+                                <td className="exercise">
+                                  {task.type || "N/A"}
+                                </td>
+                                <td className="collaboration">
+                                  {task.collaboration || "N/A"}
+                                </td>
+                                <td className="time">{task.time || "N/A"}</td>
                                 <td className="status">
                                   <div
                                     className={`status-toggle ${
@@ -229,13 +289,35 @@ const UsersList = () => {
                                         : "uncompleted"
                                     }`}
                                   >
-                                    {task.currentStatus
-                                      ? "Completed"
-                                      : "Uncompleted"}
+                                    {loadingTasks[task.id] ? (
+                                      <ClipLoader
+                                        cssOverride={override}
+                                        size={20}
+                                        color="#fff"
+                                      />
+                                    ) : task.currentStatus ? (
+                                      "Completed"
+                                    ) : (
+                                      "Uncompleted"
+                                    )}
                                   </div>
                                 </td>
                                 <td>
-                                  <button>Toggle</button>
+                                  <button
+                                    onClick={() =>
+                                      toggleTaskStatus(
+                                        course.id,
+                                        week.id,
+                                        day.id,
+                                        task.id,
+                                        task.currentStatus
+                                      )
+                                    }
+                                  >
+                                    {task.currentStatus
+                                      ? "Set to Undone"
+                                      : "Set to Done"}
+                                  </button>
                                 </td>
                               </tr>
                             ))}
@@ -253,9 +335,19 @@ const UsersList = () => {
               onClick={() => handlePageChange(-1)}
               disabled={currentPage === 1}
             >
-              Previous
+              Prev.
             </button>
-            <span>Page {currentPage}</span>
+            <span
+              style={{
+                background: "#416ad8",
+                padding: "5px",
+                borderTopLeftRadius: "5px",
+                borderBottomLeftRadius: "5px",
+              }}
+            >
+              {" "}
+              {currentPage}
+            </span>
             <button
               onClick={() => handlePageChange(1)}
               disabled={currentPage * weeksPerPage >= course.weeks.length}

@@ -26,6 +26,13 @@ const Dashboard = () => {
   } = useContext(CoursesContext);
 
   const [courseProgress, setCourseProgress] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null); // Selected course for the graph
+  const [selectedWeek, setSelectedWeek] = useState(null); // Selected week
+  const [weekProgress, setWeekProgress] = useState({
+    totalTasks: 0,
+    completedTasks: 0,
+    percentage: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -65,18 +72,50 @@ const Dashboard = () => {
             totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
           return {
+            id: course.id,
             name: course.name,
             completionRatio, // Store the completion ratio as a percentage
+            weeks: course.weeks, // Include weeks for dropdown
           };
         })
         .filter(Boolean);
 
       setCourseProgress(progressData);
+      setSelectedCourse(progressData[0]); // Automatically select the first course
       setLoading(false);
     };
 
     calculateCourseProgress();
   }, [usersLoading, coursesLoading, users, courses, currentUser?.uid]);
+
+  const handleWeekSelection = (weekId) => {
+    if (!selectedCourse) return;
+
+    const week = selectedCourse.weeks[weekId];
+    if (!week) {
+      setWeekProgress({ totalTasks: 0, completedTasks: 0, percentage: 0 });
+      return;
+    }
+
+    let totalTasks = 0;
+    let completedTasks = 0;
+
+    for (let dayId in week.days) {
+      const day = week.days[dayId];
+      for (let taskId in day.tasks) {
+        const task = day.tasks[taskId];
+        totalTasks++;
+        if (task.statusByUser?.[currentUser?.uid]) {
+          completedTasks++;
+        }
+      }
+    }
+
+    const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+    setWeekProgress({ totalTasks, completedTasks, percentage });
+    setSelectedWeek(weekId);
+  };
 
   if (loading) {
     return <ClipLoader size={50} color="#58285a" />;
@@ -140,6 +179,53 @@ const Dashboard = () => {
       <div style={{ width: "600px", margin: "auto" }}>
         <Bar data={chartData} options={options} />
       </div>
+
+      {/* Week Dropdown */}
+      {selectedCourse && (
+        <div>
+          <label htmlFor="week-select">Select Week:</label>
+          <select
+            id="week-select"
+            onChange={(e) => handleWeekSelection(e.target.value)}
+          >
+            <option value="">-- Select a Week --</option>
+            {Object.keys(selectedCourse.weeks).map((weekId) => (
+              <option key={weekId} value={weekId}>
+                Week {weekId}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Visualize Week Progress */}
+      {selectedWeek && (
+        <div>
+          <h3>Progress for Week {selectedWeek}</h3>
+          <div
+            style={{
+              width: "100%",
+              background: "#b6b6b6",
+              borderRadius: "8px",
+              margin: "10px 0",
+            }}
+          >
+            <div
+              style={{
+                width: `${weekProgress.percentage}%`,
+                background: "#4caf50",
+                height: "25px",
+                borderRadius: "8px",
+                transition: "width 0.5s ease-in-out",
+              }}
+            ></div>
+          </div>
+          <p>
+            {weekProgress.completedTasks} / {weekProgress.totalTasks} tasks
+            completed ({Math.round(weekProgress.percentage)}%)
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -149,6 +149,7 @@ html {
   font-size: 0.88rem;
   min-width: 429px;
   margin-bottom: 10px;
+  box-shadow: -2px 0px 6px 7px rgb(0 0 0 / 7%);
 }
 
 .pagination {
@@ -514,13 +515,14 @@ option {
 }
 
 .status-toggle {
-  padding: 6px 12px;
+  padding: 4px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   color: white;
   font-weight: bold;
   width: fit-content;
+  font-size: 12px;
 }
 
 .status-toggle.completed {
