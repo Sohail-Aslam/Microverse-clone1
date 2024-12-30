@@ -30,7 +30,7 @@ const UsersList = () => {
   };
 
   const [openWeeks, setOpenWeeks] = useState({});
-const [loadingTasks, setLoadingTasks] = useState({});
+  const [loadingTasks, setLoadingTasks] = useState({});
   const [preparedCourses, setPreparedCourses] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -215,148 +215,166 @@ const [loadingTasks, setLoadingTasks] = useState({});
     }
   };
 
-
   return (
     <div>
-      {preparedCourses.map((course) => (
-        <div key={course.id}>
-          <h2>{course.name}</h2>
-          {course.weeks
-            .slice((currentPage - 1) * weeksPerPage, currentPage * weeksPerPage)
-            .map((week) => (
-              <div className="week" key={week.id}>
-                <div className="week-header">
-                  <p>{week.id.replace("week-", "Week")}</p>
-                  <FaChevronDown
-                    className="week-dropdown"
-                    onClick={() => toggleWeek(week.id)}
-                  />
-                </div>
-
-                {openWeeks[week.id] && (
-                  <div className="days-container">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Activity</th>
-                          <th>Type</th>
-                          <th>Collaboration</th>
-                          <th>Time</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {week.days.map((day) => (
-                          <React.Fragment key={day.id}>
-                            <tr>
-                              <td
-                                colSpan="6"
-                                style={{
-                                  textAlign: "center",
-                                  fontSize: "1.2rem",
-                                  fontWeight: "bold",
-                                  backgroundColor: "#f0f0f0",
-                                  padding: "10px",
-                                }}
-                              >
-                                {day.id.replace("day-", "Day ")}
-                              </td>
-                            </tr>
-                            {day.tasks.map((task) => (
-                              <tr key={task.id}>
-                                <td className="activity">
-                                  <a
-                                    href={task.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {task.activity}
-                                  </a>
-                                </td>
-                                <td className="exercise">
-                                  {task.type || "N/A"}
-                                </td>
-                                <td className="collaboration">
-                                  {task.collaboration || "N/A"}
-                                </td>
-                                <td className="time">{task.time || "N/A"}</td>
-                                <td className="status">
-                                  <div
-                                    className={`status-toggle ${
-                                      task.currentStatus
-                                        ? "completed"
-                                        : "uncompleted"
-                                    }`}
-                                  >
-                                    {loadingTasks[task.id] ? (
-                                      <ClipLoader
-                                        cssOverride={override}
-                                        size={20}
-                                        color="#fff"
-                                      />
-                                    ) : task.currentStatus ? (
-                                      "Completed"
-                                    ) : (
-                                      "Uncompleted"
-                                    )}
-                                  </div>
-                                </td>
-                                <td>
-                                  <button
-                                    onClick={() =>
-                                      toggleTaskStatus(
-                                        course.id,
-                                        week.id,
-                                        day.id,
-                                        task.id,
-                                        task.currentStatus
-                                      )
-                                    }
-                                  >
-                                    {task.currentStatus
-                                      ? "Set to Undone"
-                                      : "Set to Done"}
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </React.Fragment>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            ))}
-          {/* Pagination controls */}
-          <div className="pagination-controls">
-            <button
-              onClick={() => handlePageChange(-1)}
-              disabled={currentPage === 1}
-            >
-              Prev.
-            </button>
-            <span
-              style={{
-                background: "#416ad8",
-                padding: "5px",
-                borderTopLeftRadius: "5px",
-                borderBottomLeftRadius: "5px",
-              }}
-            >
-              {" "}
-              {currentPage}
-            </span>
-            <button
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage * weeksPerPage >= course.weeks.length}
-            >
-              Next
-            </button>
+      {preparedCourses.length === 0 ? (
+        <div>
+          <p>No courses available.</p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img src="src/img/nodata.jpg" alt="" height="60%" width="60%" />
           </div>
         </div>
-      ))}
+      ) : (
+        preparedCourses.map((course) => (
+          <div key={course.id}>
+            <h2>{course.name}</h2>
+            {course.weeks
+              .slice(
+                (currentPage - 1) * weeksPerPage,
+                currentPage * weeksPerPage
+              )
+              .map((week) => (
+                <div className="week" key={week.id}>
+                  <div className="week-header">
+                    <p>{week.id.replace("week-", "Week")}</p>
+                    <FaChevronDown
+                      className="week-dropdown"
+                      onClick={() => toggleWeek(week.id)}
+                    />
+                  </div>
+
+                  {openWeeks[week.id] && (
+                    <div className="days-container">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Activity</th>
+                            <th>Type</th>
+                            <th>Collaboration</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {week.days.map((day) => (
+                            <React.Fragment key={day.id}>
+                              <tr>
+                                <td
+                                  colSpan="6"
+                                  style={{
+                                    textAlign: "center",
+                                    fontSize: "1.2rem",
+                                    fontWeight: "bold",
+                                    backgroundColor: "#f0f0f0",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  {day.id.replace("day-", "Day ")}
+                                </td>
+                              </tr>
+                              {day.tasks.map((task) => (
+                                <tr key={task.id}>
+                                  <td className="activity">
+                                    <a
+                                      href={task.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {task.activity}
+                                    </a>
+                                  </td>
+                                  <td className="exercise">
+                                    {task.type || "N/A"}
+                                  </td>
+                                  <td className="collaboration">
+                                    {task.collaboration || "N/A"}
+                                  </td>
+                                  <td className="time">{task.time || "N/A"}</td>
+                                  <td className="status">
+                                    <div
+                                      className={`status-toggle ${
+                                        task.currentStatus
+                                          ? "completed"
+                                          : "uncompleted"
+                                      }`}
+                                    >
+                                      {loadingTasks[task.id] ? (
+                                        <ClipLoader
+                                          cssOverride={override}
+                                          size={20}
+                                          color="#fff"
+                                        />
+                                      ) : task.currentStatus ? (
+                                        "Completed"
+                                      ) : (
+                                        "Uncompleted"
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <button
+                                      onClick={() =>
+                                        toggleTaskStatus(
+                                          course.id,
+                                          week.id,
+                                          day.id,
+                                          task.id,
+                                          task.currentStatus
+                                        )
+                                      }
+                                    >
+                                      {task.currentStatus
+                                        ? "Set to Undone"
+                                        : "Set to Done"}
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              ))}
+            {/* Pagination controls */}
+            <div className="pagination">
+              <button
+                onClick={() => handlePageChange(-1)}
+                disabled={currentPage === 1}
+              >
+                Prev.
+              </button>
+              <span
+                style={{
+                  color: "white",
+                  background: "#3f6ad9",
+                  padding: "10px",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                }}
+              >
+                {" "}
+                {currentPage}
+              </span>
+              <button
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage * weeksPerPage >= course.weeks.length}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 };

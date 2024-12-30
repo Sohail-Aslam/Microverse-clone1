@@ -16,7 +16,7 @@ const AdminAssignCourse = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [searchTerm, setSearchTerm] = useState(""); // For searching users
-  const [showDropdown, setShowDropdown] = useState(false); // Control dropdown visibility
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     // Fetch all users and courses for the admin interface
@@ -47,45 +47,75 @@ const AdminAssignCourse = () => {
     fetchUsersAndCourses();
   }, []);
 
-  const handleAssignCourse = async () => {
-    if (selectedUser && selectedCourse) {
-      try {
-        const userDoc = doc(db, "students", selectedUser);
-        const userSnapshot = await getDoc(userDoc); // Fetch user data
+  // const handleAssignCourse = async () => {
+  //   if (selectedUser && selectedCourse) {
+  //     try {
+  //       const userDoc = doc(db, "students", selectedUser);
+  //       const userSnapshot = await getDoc(userDoc); // Fetch user data
 
-        if (userSnapshot.exists()) {
-          const userData = userSnapshot.data();
-          const assignedCourses = userData.assignedCourses || [];
+  //       if (userSnapshot.exists()) {
+  //         const userData = userSnapshot.data();
+  //         const assignedCourses = userData.assignedCourses || [];
 
-          // Check if the course is already assigned
-          if (assignedCourses.includes(selectedCourse)) {
-            alert("This course is already assigned to the user.");
-          } else {
-            // Assign course if not already assigned
-            await updateDoc(userDoc, {
-              assignedCourses: arrayUnion(selectedCourse),
-            });
-            alert("Course assigned successfully!");
-          }
-        }
-      } catch (error) {
-        alert(`Failed to assign course: ${error.message}`);
-      }
-    } else {
-      alert("Please select a user and a course.");
-    }
-  };
+  //         // Check if the course is already assigned
+  //         if (assignedCourses.includes(selectedCourse)) {
+  //           alert("This course is already assigned to the user.");
+  //         } else {
+  //           // Assign course if not already assigned
+  //           await updateDoc(userDoc, {
+  //             assignedCourses: arrayUnion(selectedCourse),
+  //           });
+  //           alert("Course assigned successfully!");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       alert(`Failed to assign course: ${error.message}`);
+  //     }
+  //   } else {
+  //     alert("Please select a user and a course.");
+  //   }
+  // };
 
   // Filter users based on the search term
   const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleUserSelect = (user) => {
-    setSelectedUser(user.id);
-    setSearchTerm(user.username); // Set input to selected username
-    setShowDropdown(false); // Hide dropdown
-  };
+const handleUserSelect = (user) => {
+  setSelectedUser(user.id);
+  setSearchTerm(user.username); // Set input to selected username
+  setShowDropdown(false); // Hide dropdown
+};
+
+const handleAssignCourse = async () => {
+  if (selectedUser && selectedCourse) {
+    try {
+      const userDoc = doc(db, "students", selectedUser);
+      const userSnapshot = await getDoc(userDoc); // Fetch user data
+
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.data();
+        const assignedCourses = userData.assignedCourses || [];
+
+        // Check if the course is already assigned
+        if (assignedCourses.includes(selectedCourse)) {
+          alert("This course is already assigned to the user.");
+        } else {
+          // Assign course if not already assigned
+          await updateDoc(userDoc, {
+            assignedCourses: arrayUnion(selectedCourse),
+          });
+          alert("Course assigned successfully!");
+        }
+      }
+    } catch (error) {
+      alert(`Failed to assign course: ${error.message}`);
+    }
+  } else {
+    alert("Please select a user and a course.");
+  }
+};
+
 
   return (
     <div
@@ -105,7 +135,9 @@ const AdminAssignCourse = () => {
               setSearchTerm(e.target.value);
               setShowDropdown(true); // Show dropdown while typing
             }}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Delay to allow selection
+            onBlur={() => {
+              setTimeout(() => setShowDropdown(false), 300); // Delay hiding the dropdown
+            }}
             onFocus={() => setShowDropdown(true)} // Show dropdown on focus
           />
           {showDropdown && filteredUsers.length > 0 && (

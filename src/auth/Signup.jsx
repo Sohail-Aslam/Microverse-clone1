@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import ClipLoader from "react-spinners/ClipLoader";
 import { auth, db } from "./firebase";
 
@@ -21,91 +21,122 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const override = {
     display: "block",
     margin: "0 auto",
   };
-  const handleSaveUsername = async (user) => {
-    try {
-      const studentsCollection = collection(db, "students");
-      await addDoc(studentsCollection, {
-        username: name,
-        timestamp: new Date(),
-        userUid: user.uid,
-      });
-      console.log("Username saved successfully!");
-    } catch (error) {
-      alert(error);
+const handleSaveUsername = async (user) => {
+  try {
+    const studentsCollection = collection(db, "students");
+
+    // Check if the username already exists
+    const usernameQuery = query(
+      studentsCollection,
+      where("username", "==", name)
+    );
+    const querySnapshot = await getDocs(usernameQuery);
+
+    if (!querySnapshot.empty) {
+      // Username exists
+      alert("Username already exists. Please choose another one.");
+      return false; // Exit the function, indicating the username is not unique
     }
-  };
+
+    // Save the username to Firestore
+    await addDoc(studentsCollection, {
+      username: name,
+      timestamp: new Date(),
+      userUid: user.uid,
+    });
+
+    console.log("Username saved successfully!");
+    return true; // Indicate success
+  } catch (error) {
+    alert("Error saving username:", error.message);
+    return false; // Indicate failure
+  }
+};
+
   const sendVerificationEmail = async (user) => {
     try {
       await sendEmailVerification(user);
-      
     } catch (error) {
       alert("Error sending verification email:", error.message);
     }
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setShowPopup(false);
+const handleSignup = async (e) => {
+  e.preventDefault();
+  setShowPopup(false);
 
-    if (name === "") {
-      setError("Please Fill Form");
-      setTimeout(() => {
-        setShowPopup(false);
-        setError(""); // Clear the popup message
-      }, 6000);
-      return;
+   if (password !== confirmPassword) {
+     setError("Passwords do not match.");
+     return;
+   }
+
+  if (name === "") {
+    setError("Please Fill Form");
+    setTimeout(() => {
+      setShowPopup(false);
+      setError(""); // Clear the popup message
+    }, 6000);
+    return;
+  }
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const { user } = userCredential;
+    setLoading(true);
+
+    await sendVerificationEmail(user);
+    await updateProfile(user, { displayName: name });
+
+    // Ensure the username is unique before saving
+    const isUsernameSaved = await handleSaveUsername(user);
+    if (!isUsernameSaved) {
+      return; // Exit if username is not unique
     }
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const { user } = userCredential;
-      setLoading(true);
-
-      await sendVerificationEmail(user);
-      await updateProfile(user, { displayName: name });
-      await handleSaveUsername(user);
-      setShowPopup(true);
-      setPopup("Signup successful! A verification email sent.");
-      setTimeout(() => {
-        setShowPopup(false);
-        setError(""); // Clear the popup message
-      }, 5000);
-      setEmail("");
-      setPassword("");
-      setName("");
-    } catch (err) {
-      switch (err.code) {
-        case "auth/email-already-in-use":
-          setError("This email is already in use.");
-          break;
-        case "auth/network-request-failed":
-          setError("Check Interenet connection");
-          break;
-        case "auth/invalid-email":
-          setError("Invalid email address.");
-          break;
-        case "auth/weak-password":
-          setError("Password should be at least 6 characters.");
-          break;
-        case "auth/admin-restricted-operation":
-          setError("This operation is restricted to administrators only.");
-          break;
-        default:
-          setError(err.message);
-      }
-    } finally {
-      setLoading(false); // Set loading to false after process is complete
+    setShowPopup(true);
+    setPopup("Signup successful! A verification email sent.");
+    setTimeout(() => {
+      setShowPopup(false);
+      setError(""); // Clear the popup message
+    }, 5000);
+    setEmail("");
+    setPassword("");
+    setName("");
+  } catch (err) {
+    switch (err.code) {
+      case "auth/email-already-in-use":
+        setError("This email is already in use.");
+        console.log(err.message)
+        break;
+      case "auth/network-request-failed":
+        setError("Check Interenet connection");
+        break;
+      case "auth/invalid-email":
+        setError("Invalid email address.");
+        break;
+      case "auth/weak-password":
+        setError("Password should be at least 6 characters.");
+        break;
+      case "auth/admin-restricted-operation":
+        setError("This operation is restricted to administrators only.");
+        break;
+      default:
+        setError(err.message);
     }
-  };
+  } finally {
+    setLoading(false); // Set loading to false after process is complete
+  }
+};
 
   return (
     <div className="signup-container">
@@ -152,6 +183,19 @@ function Signup() {
               placeholder="Password..."
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              required
+            />
+          </div>
+          <div className="input-wrapper">
+            <i className="icon-password">
+              <RiLockPasswordFill />
+            </i>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              placeholder="Confirm password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>

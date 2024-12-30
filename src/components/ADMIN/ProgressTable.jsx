@@ -2,17 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import ClipLoader from "react-spinners/ClipLoader";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../auth/firebase";
 
 function ProgressTable() {
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
   const [selectedUserUid, setSelectedUserUid] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [loadingTaskId, setLoadingTaskId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [selectedWeek, setSelectedWeek] = useState(null);
-
+const [loadingTaskId, setLoadingTaskId] = useState(false)
   const fetchStudents = async () => {
     try {
       const studentsCollection = collection(db, "students");
@@ -22,96 +21,108 @@ function ProgressTable() {
         username: doc.data().username,
       }));
       setStudents(studentsList);
-      setLoading(false);
     } catch (error) {
       alert("Failed to fetch students.");
-      setLoading(false);
     }
   };
 
-  const fetchCourses = async (uid) => {
+  const fetchCoursesForUser = async (uid) => {
+    setLoading(true);
     try {
+      const studentsCollection = collection(db, "students");
+      const userQuery = query(studentsCollection, where("userUid", "==", uid));
+      const userSnapshot = await getDocs(userQuery);
+
+      if (userSnapshot.empty) {
+        alert("User not found.");
+        setCourses([]);
+        setLoading(false);
+        return;
+      }
+
+      const userData = userSnapshot.docs[0].data();
+      const { assignedCourses } = userData;
+
+      if (!assignedCourses || assignedCourses.length === 0) {
+        alert("No assigned courses for the selected user.");
+        setCourses([]);
+        setLoading(false);
+        return;
+      }
+
       const coursesCollection = collection(db, "courses");
       const coursesSnapshot = await getDocs(coursesCollection);
 
       const coursesData = await Promise.all(
-        coursesSnapshot.docs.map(async (courseDoc) => {
-          const courseData = { id: courseDoc.id, ...courseDoc.data() };
+        coursesSnapshot.docs
+          .filter((courseDoc) => assignedCourses.includes(courseDoc.id))
+          .map(async (courseDoc) => {
+            const courseData = { id: courseDoc.id, ...courseDoc.data() };
 
-          const weeksCollection = collection(
-            db,
-            `courses/${courseDoc.id}/weeks`
-          );
-          const weeksSnapshot = await getDocs(weeksCollection);
+            const weeksCollection = collection(
+              db,
+              `courses/${courseDoc.id}/weeks`
+            );
+            const weeksSnapshot = await getDocs(weeksCollection);
 
-          courseData.weeks = await Promise.all(
-            weeksSnapshot.docs.map(async (weekDoc) => {
-              const weekData = { id: weekDoc.id, ...weekDoc.data() };
+            courseData.weeks = await Promise.all(
+              weeksSnapshot.docs.map(async (weekDoc) => {
+                const weekData = { id: weekDoc.id, ...weekDoc.data() };
 
-              const daysCollection = collection(
-                db,
-                `courses/${courseDoc.id}/weeks/${weekDoc.id}/days`
-              );
-              const daysSnapshot = await getDocs(daysCollection);
+                const daysCollection = collection(
+                  db,
+                  `courses/${courseDoc.id}/weeks/${weekDoc.id}/days`
+                );
+                const daysSnapshot = await getDocs(daysCollection);
 
-              weekData.days = await Promise.all(
-                daysSnapshot.docs.map(async (dayDoc) => {
-                  const dayData = { id: dayDoc.id, ...dayDoc.data() };
+                weekData.days = await Promise.all(
+                  daysSnapshot.docs.map(async (dayDoc) => {
+                    const dayData = { id: dayDoc.id, ...dayDoc.data() };
 
-                  const tasksCollection = collection(
-                    db,
-                    `courses/${courseDoc.id}/weeks/${weekDoc.id}/days/${dayDoc.id}/tasks`
-                  );
-                  const tasksSnapshot = await getDocs(tasksCollection);
+                    const tasksCollection = collection(
+                      db,
+                      `courses/${courseDoc.id}/weeks/${weekDoc.id}/days/${dayDoc.id}/tasks`
+                    );
+                    const tasksSnapshot = await getDocs(tasksCollection);
 
-                  dayData.tasks = tasksSnapshot.docs.map((taskDoc) => {
-                    const taskData = taskDoc.data();
-                    const userStatus = taskData.statusByUser?.[uid] || false;
+                    dayData.tasks = tasksSnapshot.docs.map((taskDoc) => {
+                      const taskData = taskDoc.data();
+                      const userStatus = taskData.statusByUser?.[uid] || false;
 
-                    return {
-                      id: taskDoc.id,
-                      ...taskData,
-                      currentStatus: userStatus,
-                    };
-                  });
+                      return {
+                        id: taskDoc.id,
+                        ...taskData,
+                        currentStatus: userStatus,
+                      };
+                    });
 
-                  return dayData;
-                })
-              );
+                    return dayData;
+                  })
+                );
 
-              return weekData;
-            })
-          );
+                return weekData;
+              })
+            );
 
-          return courseData;
-        })
+            return courseData;
+          })
       );
 
       setCourses(coursesData);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching courses data: ", error);
       alert("Failed to fetch courses.");
+    } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (selectedUserUid) {
-      setLoading(true);
-      fetchCourses(selectedUserUid);
-    }
-  }, [selectedUserUid]);
-
-  useEffect(() => {
-    fetchStudents();
-    fetchCourses();
-  }, []);
-
   const handleUserSelect = (e) => {
     const selectedUid = e.target.value;
-    console.log("Selected User UID:", selectedUid);
     setSelectedUserUid(selectedUid);
+    if (selectedUid) {
+      fetchCoursesForUser(selectedUid);
+    }
   };
 
   const handleWeekSelect = (weekId) => {
@@ -120,8 +131,16 @@ function ProgressTable() {
     );
   };
 
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
   if (loading) {
-    return <div>Loading data...</div>;
+    return (
+      <div>
+        <ClipLoader color="#000" loading={loading} size={50} />
+      </div>
+    );
   }
 
   return (

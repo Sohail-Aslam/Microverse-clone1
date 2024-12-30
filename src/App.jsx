@@ -46,11 +46,13 @@ function App() {
   const ProtectedRoute = ({ children }) =>
     user ? children : <Navigate to="/login" />;
 
- 
+   const showSidebarAndData =
+     user &&
+     !["/signup", "/login", "/forgotPassword"].includes(location.pathname);
+
 
   return (
     <AdminProvider>
-      {" "}
       {/* Wrap your components with AdminProvider */}
       <BrowserRouter>
         <div className="container">
@@ -62,9 +64,9 @@ function App() {
 
           {/* Redirect admin to /admin */}
 
-          {user && <Sidebar />}
+          {showSidebarAndData && <Sidebar />}
           <div className="main-content">
-            {user && <Data />}
+            {showSidebarAndData && <Data />}
             <div className="pages-container">
               <Routes>
                 <Route
@@ -109,7 +111,7 @@ function App() {
                 />
               </Routes>
             </div>
-            {user && (
+            {showSidebarAndData && (
               <button className="support">
                 <FaRegQuestionCircle />
                 Support

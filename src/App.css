@@ -149,7 +149,7 @@ html {
   font-size: 0.88rem;
   min-width: 429px;
   margin-bottom: 10px;
-  box-shadow: -2px 0px 6px 7px rgb(0 0 0 / 7%);
+  box-shadow: -2px 0 6px 7px rgb(0 0 0 / 7%);
 }
 
 .pagination {
