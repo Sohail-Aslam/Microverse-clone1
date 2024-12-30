@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import { FaTasks } from "react-icons/fa";
 import { MdFeedback } from "react-icons/md";
@@ -9,22 +9,10 @@ import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/300.css";
 import { RiAdminFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../auth/firebase";
-
-const ADMIN_EMAILS = ["imumairhamza@gmail.com", "emsohailaslam@gmail.com"];
+import { AdminContext } from "../context"; // Import the context
 
 function sidebar() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAdmin(ADMIN_EMAILS.includes(user.email));
-      } else {
-        setIsAdmin(false);
-      }
-    });
-  }, []);
+  const {isAdmin} = useContext(AdminContext)
   return (
     <div className="sidebar">
       <img
@@ -37,24 +25,35 @@ function sidebar() {
         src="src/img/logo.png"
         alt=""
       />
-      <h4 className="heading">HOME</h4>
-      <ul>
-        <li className="pages">
-          <RiDashboardFill className="icons" />
-          Dashboard
-        </li>
-      </ul>
+      {!isAdmin && (
+        <>
+          <h4 className="heading">HOME</h4>
+          <ul>
+            <li className="pages">
+              <NavLink to="/dashboard">
+                <p className="tab-text">
+                  <RiDashboardFill className="icons" />
+                  Dashboard
+                </p>
+              </NavLink>
+            </li>
+          </ul>
+        </>
+      )}
 
       <h4 className="heading">LEARN</h4>
       <ul>
-        <li className="pages">
-          <NavLink to="/">
-            <p className="tab-text">
-              <FaTasks className="icons" />
-              View Progress
-            </p>
-          </NavLink>
-        </li>
+        {!isAdmin && (
+          <li className="pages">
+            <NavLink to="/">
+              <p className="tab-text">
+                <FaTasks className="icons" />
+                View Progress
+              </p>
+            </NavLink>
+          </li>
+        )}
+
         <li className="pages">
           <MdFeedback className="icons" />
           Professional Skills Feedback
